@@ -3,6 +3,12 @@ CFLAGS  ?= -O2 -g
 CFLAGS  += -Wall -Wextra -fPIC -fvisibility=hidden -Iinclude
 PREFIX  ?= /usr/local
 SOVERSION = 0
+VERSION = 0.0.1
+
+libcyn.pc: libcyn.pc.in
+	sed -e 's|@PREFIX@|$(PREFIX)|g' \
+	    -e 's|@VERSION@|$(VERSION)|g' \
+	    libcyn.pc.in > libcyn.pc
 
 SRC = src/cyn.c src/util.c src/user.c src/system.c src/network.c \
       src/memory.c src/storage.c src/cpu.c src/gpu.c src/hardware.c

@@ -1,0 +1,15 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: libcyn
+Description: Read-only Linux system information access library
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lcyn
+Cflags: -I${includedir}
+
+libcyn.pc: libcyn.pc.in
+	sed -e 's|/usr/local|$(PREFIX)|g' \
+	    -e 's|0.0.1|$(VERSION)|g' \
+	    $< > $@
