@@ -1,7 +1,6 @@
 # ==============================================================================
 # libcyn Makefile
-# Zero-configuration global installation. 
-# Makes "clang app.c -o app" work out of the box.
+# Zero-configuration global installation.
 # ==============================================================================
 
 PREFIX  ?= /usr/local
@@ -38,39 +37,57 @@ libcyn.pc: libcyn.pc.in
 
 # --- Installation ---
 install: all
-	@echo "Installing libcyn..."
+	@echo "Installing libcyn to $(DESTDIR)$(PREFIX)..."
+	
+	# 1. Copy Headers
 	@install -d $(DESTDIR)$(PREFIX)/include
 	@install -m644 include/cyn.h $(DESTDIR)$(PREFIX)/include/
 	
+	# 2. Copy Libraries
 	@install -d $(DESTDIR)$(PREFIX)/lib
 	@install -m644 libcyn.a $(DESTDIR)$(PREFIX)/lib/
 	@install -m755 libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/
 	@ln -sf libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/libcyn.so
 	
+	# 3. Copy pkg-config & Man page
 	@install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
 	@install -m644 libcyn.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
-	
 	@install -d $(DESTDIR)$(PREFIX)/share/man/man3
 	@install -m644 man/cyn.3 $(DESTDIR)$(PREFIX)/share/man/man3/
 
-	# 1. Update OS dynamic linker (fixes "cannot open shared object file")
-	@ldconfig 2>/dev/null || sudo ldconfig 2>/dev/null || true
-
-	# 2. Tell Clang/GCC to look in /usr/local/lib and /usr/local/include globally
-	@echo "Configuring global compiler paths..."
-	@echo "$(PREFIX)/lib" | sudo tee /etc/ld.so.conf.d/libcyn.conf > /dev/null || true
-	@echo "LDFLAGS=-L$(PREFIX)/lib" | sudo tee /etc/clang/global-config.cfg > /dev/null 2>&1 || true
-	@echo "Configured! You can now use: clang myapp.c -o myapp"
+	# 4. System Configuration (Skip if packaging)
+	@if [ -z "$(DESTDIR)" ]; then \
+		echo "Configuring global system paths..."; \
+		\
+		# Tell Fedora/Debian/etc. to look in our lib directory automatically
+		echo "$(PREFIX)/lib" | sudo tee /etc/ld.so.conf.d/libcyn.conf > /dev/null; \
+		sudo ldconfig; \
+		\
+		# Tell Clang to auto-link -lcyn for all future programs
+		sudo mkdir -p /etc/clang; \
+		echo "LDFLAGS=-L$(PREFIX)/lib -lcyn" | sudo tee /etc/clang/global-config.cfg > /dev/null; \
+		\
+		echo "Done! You can now compile using: clang myapp.c -o myapp"; \
+	fi
 
 uninstall:
+	@echo "Uninstalling libcyn..."
 	@rm -f $(DESTDIR)$(PREFIX)/include/cyn.h
 	@rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.a
 	@rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.so.$(SOVERSION)
 	@rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.so
 	@rm -f $(DESTDIR)$(PREFIX)/lib/pkgconfig/libcyn.pc
 	@rm -f $(DESTDIR)$(PREFIX)/share/man/man3/cyn.3
-	@rm -f /etc/ld.so.conf.d/libcyn.conf
-	@ldconfig 2>/dev/null || sudo ldconfig 2>/dev/null || true
+	@if [ -z "$(DESTDIR)" ]; then \
+		sudo rm -f /etc/ld.so.conf.d/libcyn.conf; \
+		sudo rm -f /etc/clang/global-config.cfg; \
+		sudo ldconfig; \
+	fi
+	@echo "Uninstall complete."
+
+check: all
+	@$(CC) $(CFLAGS) tests/test_cyn.c libcyn.a -o test_cyn
+	@./test_cyn
 
 clean:
 	@rm -f $(OBJ) libcyn.a libcyn.so libcyn.so.$(SOVERSION) libcyn.pc test_cyn demo
