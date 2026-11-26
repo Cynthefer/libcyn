@@ -1,5 +1,7 @@
 # libcyn
 
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://cynthefer.github.io/libcyn/)
+
 libcyn is a robust, dependency-free C library for querying Linux system information — users, hardware, network, storage, and OS details — entirely without privilege escalation.
 
 Unlike command-line tools that format text for humans, libcyn provides raw, structured data. It outputs nothing. It spawns no shells. It requires no root privileges. You ask for a struct, and it fills it with validated, zero-terminated strings. What you do with that data (print it, serialize it, send it over a socket) is entirely up to you.
