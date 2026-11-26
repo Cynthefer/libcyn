@@ -149,8 +149,11 @@ Documentation</h1>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Building with CMake (alternative)</h1>
-<p>```sh cmake -S . -B build -DCMAKE_BUILD_TYPE=Release cmake &ndash;build build ctest &ndash;test-dir build &ndash;output-on-failure sudo cmake &ndash;install build </p>
-</div></div><!-- PageDoc -->
+<div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
+<div class="line">cmake --build build</div>
+<div class="line">ctest --test-dir build --output-on-failure</div>
+<div class="line">sudo cmake --install build</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
 </div><!-- doc-content -->
