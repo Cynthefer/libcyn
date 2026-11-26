@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quick_20start_0',['Quick start',['../index.html#autotoc_md3',1,'']]]
+  ['7_20advanced_20usage_3a_20json_20gpu_20resolution_0',['7. Advanced Usage: JSON &amp;amp; GPU Resolution',['../index.html#autotoc_md22',1,'']]]
 ];

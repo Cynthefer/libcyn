@@ -93,67 +93,247 @@ $(function(){initNavTree('index.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a></p>
-<p><a href="https://cynthefer.github.io/libcyn/"><img src="https://img.shields.io/badge/docs-latest-blue" alt="Docs" class="inline"/></a></p>
-<p><span class="tt">libcyn</span> is a small, dependency-free C library for <b>reading Linux system information</b> — user, system, network, memory, storage, CPU, GPU, and hardware — <b>without privilege escalation</b>.</p>
-<p>It does <b>not</b> print anything. It exposes structured fields that callers format however they like (plain text, JSON, TUI, network protocol, …).</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
-Requirements</h1>
-<ul>
-<li>Linux (any modern distro, glibc or musl)</li>
-<li>C99 compiler</li>
-<li><b>Optional</b>: <span class="tt">curl</span> for public IP lookup</li>
-<li><b>Optional</b>: <span class="tt">pci.ids</span> (from <span class="tt">pciutils</span> or <span class="tt">hwdata</span>) for GPU names</li>
-<li><b>Never</b>: root, setuid, capabilities</li>
-</ul>
+<p>libcyn is a robust, dependency-free C library for querying Linux system information — users, hardware, network, storage, and OS details — entirely without privilege escalation.</p>
+<p>Unlike command-line tools that format text for humans, libcyn provides raw, structured data. It outputs nothing. It spawns no shells. It requires no root privileges. You ask for a struct, and it fills it with validated, zero-terminated strings. What you do with that data (print it, serialize it, send it over a socket) is entirely up to you.</p>
+<hr  />
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
-Features</h1>
-<ul>
-<li>No root required. Fields that genuinely need root are reported as <span class="tt"><a class="el" href="cyn_8h.html#aa6b1e887769e6c6261a604235b60fc6dab23baf9a47f105f520c4b9200c804a3f">CYN_UNAVAILABLE</a></span> — never bypassed.</li>
-<li>Per-field status: distinguish <em>empty</em> from <em>unreadable</em> from <em>unavailable</em>.</li>
-<li>Zero runtime dependencies (libc only).</li>
-<li>Optional <span class="tt">pci.ids</span> lookup for friendly GPU names.</li>
-<li>Optional JSON serializer (<span class="tt"><a class="el" href="cyn_8h.html#a35384073695e2d337ee49ff3e94ba946" title="Serializes a cyn_info struct to a JSON string.">cyn_to_json</a></span>) — still no I/O.</li>
-<li>Public-IP lookup is <b>opt-in</b> and outbound-only.</li>
+Table of Contents</h1>
+<ol type="1">
+<li>Key Features &amp; Engineering Advantages</li>
+<li>Why libcyn? (vs. Traditional Tools)</li>
+<li>Quick Start Example</li>
+<li>Linking: Static vs. Shared</li>
+<li>The "No Privilege Escalation" Guarantee</li>
+<li>Data Source Reference</li>
+<li>Advanced Usage: JSON &amp; GPU Resolution</li>
+<li>Requirements &amp; Portability</li>
+<li>Building &amp; Installing</li>
+<li>Documentation &amp; API Reference</li>
+</ol>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+1. Key Features &amp; Engineering Advantages</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+Scalable &amp; High-Performance</h2>
+<p>Traditional system tools (neofetch, inxi) spawn multiple processes (fork, exec), pipe text through awk and grep, and parse strings. This is disastrously slow for loops, daemons, or high-frequency monitoring. libcyn does none of this. It bypasses the shell entirely, reading directly from /proc, /sys, and standard libc APIs. It executes in microseconds and has virtually zero CPU overhead, making it safe to call in tight loops or performance-critical daemons.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+Unprivileged by Design (Zero Escalation)</h2>
+<p>Security is non-negotiable. libcyn requires no sudo, setuid, or Linux capabilities. Instead of trying to bypass the kernel's security model to read restricted SMBIOS/DMI memory tables, libcyn reports those specific fields as CYN_UNAVAILABLE along with a human-readable reason. Your software runs perfectly as a standard user.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+Ultra-Portable</h2>
+<p>Written in strict C99 with zero external runtime dependencies. It compiles flawlessly on:</p><ul>
+<li>Linux: glibc and musl (Alpine)</li>
+<li>Architecture: x86_64, ARM64 (aarch64), and ARMv7</li>
+<li>Termux (Android): Fully supported. The library understands Termux's unique prefix (/data/data/com.termux/files/usr) and Bionic libc limitations.</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
-Quick start</h1>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="cyn_8h.html">cyn.h</a>&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"> </div>
-<div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
-<div class="line">    <a class="code hl_typedef" href="cyn_8h.html#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *ctx = <a class="code hl_function" href="cyn_8h.html#a7a3172a84b5d48b5683caf280be49035">cyn_create</a>(NULL);</div>
-<div class="line">    <a class="code hl_struct" href="structcyn__info.html">cyn_info</a> info;</div>
-<div class="line">    <a class="code hl_function" href="cyn_8h.html#a92e76b5e00993225ec6a46da47fb5b76">cyn_collect</a>(ctx, &amp;info);</div>
-<div class="line"> </div>
-<div class="line">    <span class="keywordflow">if</span> (cyn_field_ok(&amp;info.<a class="code hl_variable" href="structcyn__info.html#a08ebe8f0914dcf03ecda753579744215">system</a>.<a class="code hl_variable" href="structcyn__system.html#ae40b30a95c41e69931daf64548b974a7">distro</a>))</div>
-<div class="line">        printf(<span class="stringliteral">&quot;distro: %s\n&quot;</span>, info.<a class="code hl_variable" href="structcyn__info.html#a08ebe8f0914dcf03ecda753579744215">system</a>.<a class="code hl_variable" href="structcyn__system.html#ae40b30a95c41e69931daf64548b974a7">distro</a>.<a class="code hl_variable" href="structcyn__field.html#a77cefac94d8218b1315e7039fc825cb9">value</a>);</div>
-<div class="line"> </div>
-<div class="line">    <a class="code hl_function" href="cyn_8h.html#aeae875e2ac031b703df24d6be6112994">cyn_destroy</a>(ctx);</div>
-<div class="line">}</div>
-<div class="ttc" id="acyn_8h_html"><div class="ttname"><a href="cyn_8h.html">cyn.h</a></div><div class="ttdoc">Public API for libcyn, a read-only Linux system information library.</div></div>
-<div class="ttc" id="acyn_8h_html_a7a3172a84b5d48b5683caf280be49035"><div class="ttname"><a href="cyn_8h.html#a7a3172a84b5d48b5683caf280be49035">cyn_create</a></div><div class="ttdeci">CYN_API cyn_ctx_t * cyn_create(const cyn_options *opts)</div><div class="ttdoc">Allocates and initializes a new context.</div></div>
-<div class="ttc" id="acyn_8h_html_a92e76b5e00993225ec6a46da47fb5b76"><div class="ttname"><a href="cyn_8h.html#a92e76b5e00993225ec6a46da47fb5b76">cyn_collect</a></div><div class="ttdeci">CYN_API cyn_status cyn_collect(cyn_ctx_t *ctx, cyn_info *out)</div><div class="ttdoc">Collects all system information into a single struct.</div></div>
-<div class="ttc" id="acyn_8h_html_abec42e1ee149952019d45d9df6917640"><div class="ttname"><a href="cyn_8h.html#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a></div><div class="ttdeci">struct cyn_ctx cyn_ctx_t</div><div class="ttdoc">Opaque context holding state and cache.</div><div class="ttdef"><b>Definition</b> cyn.h:160</div></div>
-<div class="ttc" id="acyn_8h_html_aeae875e2ac031b703df24d6be6112994"><div class="ttname"><a href="cyn_8h.html#aeae875e2ac031b703df24d6be6112994">cyn_destroy</a></div><div class="ttdeci">CYN_API void cyn_destroy(cyn_ctx_t *ctx)</div><div class="ttdoc">Frees the context and all cached data.</div></div>
-<div class="ttc" id="astructcyn__field_html_a77cefac94d8218b1315e7039fc825cb9"><div class="ttname"><a href="structcyn__field.html#a77cefac94d8218b1315e7039fc825cb9">cyn_field::value</a></div><div class="ttdeci">char value[256]</div><div class="ttdef"><b>Definition</b> cyn.h:39</div></div>
-<div class="ttc" id="astructcyn__info_html"><div class="ttname"><a href="structcyn__info.html">cyn_info</a></div><div class="ttdoc">Aggregate struct containing all system information.</div><div class="ttdef"><b>Definition</b> cyn.h:140</div></div>
-<div class="ttc" id="astructcyn__info_html_a08ebe8f0914dcf03ecda753579744215"><div class="ttname"><a href="structcyn__info.html#a08ebe8f0914dcf03ecda753579744215">cyn_info::system</a></div><div class="ttdeci">cyn_system system</div><div class="ttdef"><b>Definition</b> cyn.h:142</div></div>
-<div class="ttc" id="astructcyn__system_html_ae40b30a95c41e69931daf64548b974a7"><div class="ttname"><a href="structcyn__system.html#ae40b30a95c41e69931daf64548b974a7">cyn_system::distro</a></div><div class="ttdeci">cyn_field distro</div><div class="ttdef"><b>Definition</b> cyn.h:74</div></div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
-Documentation</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+Trinary Truth &amp; Data Integrity</h2>
+<p>In C, an empty string ("") is not the same as "not found," and "not found" is not the same as "permission denied." Every field returned by libcyn is wrapped in a <a class="el" href="structcyn__field.html" title="A wrapper for every single piece of data returned by libcyn.">cyn_field</a> struct containing a status (CYN_OK, CYN_UNAVAILABLE, CYN_ERROR). You will never have to guess why a string is empty.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+Zero Side Effects</h2>
+<p>A library should not dictate how an application behaves. libcyn does not print to stdout, write cache files to disk, or spawn shells. (The only exception is an explicit, opt-in curl call if you request the public IP address).</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+Built-in Extras</h2>
 <ul>
-<li><b>Man page</b>: <span class="tt">man cyn</span> after <span class="tt">make install</span></li>
-<li><b>Reference</b>: <span class="tt">docs/API.md</span></li>
-<li><b>Design</b>: <span class="tt">docs/DESIGN.md</span></li>
-<li><b>Building</b>: <span class="tt">docs/BUILDING.md</span></li>
+<li>JSON Serializer: Generate formatted JSON instantly with <a class="el" href="cyn_8h.html#a35384073695e2d337ee49ff3e94ba946" title="Serializes a cyn_info struct to a JSON string.">cyn_to_json()</a>.</li>
+<li>GPU Resolution: Automatically translates raw PCI hex IDs (e.g., 0x10de) into human-readable names by parsing pci.ids.</li>
+<li>Dual Build: Compiles to both libcyn.a (for standalone binaries) and libcyn.so (for system packages).</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
-Building with CMake (alternative)</h1>
-<div class="fragment"><div class="line">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</div>
-<div class="line">cmake --build build</div>
-<div class="line">ctest --test-dir build --output-on-failure</div>
-<div class="line">sudo cmake --install build</div>
-</div><!-- fragment --> </div></div><!-- PageDoc -->
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+2. Why libcyn? (vs. Traditional Tools)</h1>
+<p>If you have ever tried to build a dashboard, a monitoring agent, or a TUI in C, you know the pain of gathering system information. The traditional approach involves shelling out to tools like neofetch, lspci, or uname, and then using regex to parse their text output.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Feature  </th><th class="markdownTableHeadLeft">Traditional Tools (neofetch, inxi)  </th><th class="markdownTableHeadLeft">libcyn  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">Interface  </td><td class="markdownTableBodyLeft">Text output parsed via regex / string splitting.  </td><td class="markdownTableBodyLeft">Structured C Structs. Type-safe, validated.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">Overhead  </td><td class="markdownTableBodyLeft">Spawns 5-10 separate processes (fork, exec, pipe).  </td><td class="markdownTableBodyLeft">Zero process spawning. Direct /proc access.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">Security  </td><td class="markdownTableBodyLeft">Requires sudo for full data.  </td><td class="markdownTableBodyLeft">Zero privilege escalation. Runs as user.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">Scalability  </td><td class="markdownTableBodyLeft">Terrible for tight loops. Text parsing is slow.  </td><td class="markdownTableBodyLeft">Blazing fast. Microsecond data retrieval.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">Portability  </td><td class="markdownTableBodyLeft">Breaks if awk is missing or formats change.  </td><td class="markdownTableBodyLeft">Deterministic. Works on glibc, musl, and Termux.  </td></tr>
+</table>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+3. Quick Start Example</h1>
+<p>Here is how you fetch the operating system's distro name and total RAM: </p><pre class="fragment">#include &lt;cyn.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    /* Pass NULL for defaults. */
+    cyn_ctx_t *ctx = cyn_create(NULL);
+    if (!ctx) {
+        fprintf(stderr, "Failed to create context\n");
+        return 1;
+    }
+
+    cyn_info info;
+    /* Collects all sections: user, system, network, memory, etc. */
+    if (cyn_collect(ctx, &amp;info) == CYN_OK) {
+
+        /* 1. Check if the field is available */
+        if (cyn_field_ok(&amp;info.system.distro)) {
+            printf("Distro: %s\n", info.system.distro.value);
+        } else {
+            printf("Distro: Unknown (%s)\n", info.system.distro.value);
+        }
+
+        if (cyn_field_ok(&amp;info.memory.size)) {
+            printf("RAM: %s\n", info.memory.size.value);
+        }
+
+        /* 2. Observe an unavailable field and its reason */
+        if (!cyn_field_ok(&amp;info.memory.speed)) {
+            /* Outputs: Memory Speed: requires root (dmidecode) */
+            printf("Memory Speed: %s\n", info.memory.speed.value);
+        }
+    }
+
+    cyn_destroy(ctx);
+    return 0;
+}
+</pre><hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+4. Linking: Static vs. Shared</h1>
+<p>libcyn builds both a static (libcyn.a) and a shared (libcyn.so.0) library. You get to choose how you want to link your application.</p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+When to use Shared Linking (Default)</h2>
+<p>Use this if you are distributing your software as a package (.deb, .rpm, AUR). The binary stays small, and if libcyn is updated via the system package manager, your software automatically uses the patched version. </p><pre class="fragment">cc myapp.c $(pkg-config --cflags --libs libcyn) -o myapp
+</pre><h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+When to use Static Linking</h2>
+<p>Use this if you want to build a single, standalone executable that you can drop onto any compatible Linux server. The libcyn code is physically copied into your binary, meaning the target machine does not need libcyn installed to run it. </p><pre class="fragment">cc myapp.c -I/usr/local/include /usr/local/lib/libcyn.a -o myapp
+</pre><hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+5. The "No Privilege Escalation" Guarantee</h1>
+<p>Security and stability were the primary design goals. libcyn does not require sudo, setuid, setgid, or Linux Capabilities.</p>
+<p>If a piece of information is locked behind root permissions (typically SMBIOS/DMI memory timing data), libcyn will not attempt to bypass the kernel's security model. Instead, it populates that specific field's .value with an explanation (e.g., "requires root (dmidecode)") and sets its .status to CYN_UNAVAILABLE.</p>
+<p>We do not read /dev/mem, we do not spawn sudo, and we do not use system() or popen().</p>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+6. Data Source Reference</h1>
+<p>Here is a detailed breakdown of exactly where libcyn pulls its data from, and what happens if the file or API is unavailable.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Section  </th><th class="markdownTableHeadLeft">Field  </th><th class="markdownTableHeadLeft">Source  </th><th class="markdownTableHeadLeft">Root Required?  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">User  </td><td class="markdownTableBodyLeft">username, uid, gid, home, shell  </td><td class="markdownTableBodyLeft">getpwuid()  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">fullname  </td><td class="markdownTableBodyLeft">getpwuid() (GECOS field)  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">System  </td><td class="markdownTableBodyLeft">kernel, architecture, release, version  </td><td class="markdownTableBodyLeft">uname() syscall  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">distro  </td><td class="markdownTableBodyLeft">/etc/os-release  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">Network  </td><td class="markdownTableBodyLeft">hostname  </td><td class="markdownTableBodyLeft">gethostname()  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">domain  </td><td class="markdownTableBodyLeft">/etc/resolv.conf  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">interface, local_ip  </td><td class="markdownTableBodyLeft">getifaddrs() (skips loopback)  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">public_ip  </td><td class="markdownTableBodyLeft">curl <a href="https://api.ipify.org">https://api.ipify.org</a>  </td><td class="markdownTableBodyLeft">No (Requires internet)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">Memory  </td><td class="markdownTableBodyLeft">size  </td><td class="markdownTableBodyLeft">/proc/meminfo  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">type, speed, form_factor, cas_latency  </td><td class="markdownTableBodyLeft">DMI SMBIOS tables  </td><td class="markdownTableBodyLeft">Yes (Marked Unavailable)  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">Storage  </td><td class="markdownTableBodyLeft">home_dir  </td><td class="markdownTableBodyLeft">getpwuid()  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">total, used, free  </td><td class="markdownTableBodyLeft">statvfs() on home_dir  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">CPU  </td><td class="markdownTableBodyLeft">vendor, model, cores  </td><td class="markdownTableBodyLeft">/proc/cpuinfo  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">GPU  </td><td class="markdownTableBodyLeft">vendor, model (PCI IDs)  </td><td class="markdownTableBodyLeft">/sys/class/drm/card*/device/  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"></td><td class="markdownTableBodyLeft">driver  </td><td class="markdownTableBodyLeft">/sys/class/drm/card*/device/uevent  </td><td class="markdownTableBodyLeft">No  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">Hardware  </td><td class="markdownTableBodyLeft">brand, model, type, version  </td><td class="markdownTableBodyLeft">/sys/class/dmi/id/* (DMI IDs)  </td><td class="markdownTableBodyLeft">No (Usually 0444)  </td></tr>
+</table>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+7. Advanced Usage: JSON &amp; GPU Resolution</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+JSON Serialization</h2>
+<p>If you need to send system info over a network or log it to a file, use the built-in serializer. This allocates memory which you must free. </p><pre class="fragment">#include &lt;cyn.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(void) {
+    cyn_ctx_t *ctx = cyn_create(NULL);
+    cyn_info info;
+    cyn_collect(ctx, &amp;info);
+
+    char *json = cyn_to_json(&amp;info);
+    if (json) {
+        printf("%s\n", json);
+        cyn_json_free(json); /* Must free! */
+    }
+
+    cyn_destroy(ctx);
+    return 0;
+}
+</pre><h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+GPU Name Resolution</h2>
+<p>By default, /sys/class/drm only provides hex IDs (e.g., Vendor: 0x10de, Device: 0x2484). If you have the pci.ids file installed on your system (typically provided by the pciutils or hwdata packages), libcyn will automatically attempt to resolve these IDs into human-readable strings.</p>
+<p>If you want to resolve them manually, or override the default search paths: </p><pre class="fragment">/* Optional: set a custom path to pci.ids */
+cyn_set_pci_ids_path("/usr/share/misc/pci.ids");
+
+const char *name = cyn_gpu_resolve_name("0x10de", "0x2484");
+if (name) {
+    printf("Resolved GPU: %s\n", name); 
+    /* Output: NVIDIA Corporation GA104 [GeForce RTX 3070] */
+}
+</pre><hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+8. Requirements &amp; Portability</h1>
+<p>libcyn is designed to be highly portable across the Linux ecosystem.</p>
+<ul>
+<li>Operating System: Linux (glibc or musl based).</li>
+<li>Architecture: Works on x86_64, ARM64 (aarch64), and ARMv7.</li>
+<li>Termux (Android): Fully supported. The library understands Termux's unique prefix (/data/data/com.termux/files/usr) and Bionic libc limitations.</li>
+<li>Compiler: C99 compliant (GCC or Clang).</li>
+<li>Build Tools: make or cmake (&gt;= 3.15).</li>
+<li>Optional Dependencies:<ul>
+<li>curl (Only if fetch_public_ip is enabled in options).</li>
+<li>pci.ids (Usually at /usr/share/misc/pci.ids, for GPU name resolution).</li>
+</ul>
+</li>
+</ul>
+<hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+9. Building &amp; Installing</h1>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+1. Using Make (Standard)</h2>
+<pre class="fragment">make
+make check       # Compiles and runs the test suite
+sudo make install
+</pre><p>To stage an installation for a package manager: </p><pre class="fragment">make install DESTDIR=/tmp/libcyn-pkg PREFIX=/usr
+</pre><h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+2. Using CMake</h2>
+<pre class="fragment">cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j
+ctest --test-dir build --output-on-failure
+sudo cmake --install build
+</pre><h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+3. Uninstalling</h2>
+<p>Makefile: </p><pre class="fragment">sudo make uninstall
+</pre><p>CMake: </p><pre class="fragment">cd build &amp;&amp; sudo cmake --build . --target uninstall
+</pre><hr  />
+<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+10. Documentation &amp; API Reference</h1>
+<p>For a deep dive into the architecture, memory ownership rules, and threading safety, see the dedicated documentation files in the docs/ folder:</p>
+<ul>
+<li>API Reference: See docs/API.md for full struct layouts, functions, and threading rules.</li>
+<li>Design Philosophy: See docs/DESIGN.md for why certain fields require root and how statuses are handled.</li>
+<li>Building Guide: See docs/BUILDING.md for sanitizer builds and packaging instructions.</li>
+<li>Man Page: man cyn (installed via make install)</li>
+</ul>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+License</h1>
+<p>This project is licensed under the BSD 3-Clause License. See the LICENSE file for details. </p>
+</div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -25,11 +25,35 @@
 var NAVTREE =
 [
   [ "libcyn", "index.html", [
-    [ "Requirements", "index.html#autotoc_md1", null ],
-    [ "Features", "index.html#autotoc_md2", null ],
-    [ "Quick start", "index.html#autotoc_md3", null ],
-    [ "Documentation", "index.html#autotoc_md4", null ],
-    [ "Building with CMake (alternative)", "index.html#autotoc_md5", null ],
+    [ "Table of Contents", "index.html#autotoc_md2", null ],
+    [ "1. Key Features &amp; Engineering Advantages", "index.html#autotoc_md4", [
+      [ "Scalable &amp; High-Performance", "index.html#autotoc_md5", null ],
+      [ "Unprivileged by Design (Zero Escalation)", "index.html#autotoc_md6", null ],
+      [ "Ultra-Portable", "index.html#autotoc_md7", null ],
+      [ "Trinary Truth &amp; Data Integrity", "index.html#autotoc_md8", null ],
+      [ "Zero Side Effects", "index.html#autotoc_md9", null ],
+      [ "Built-in Extras", "index.html#autotoc_md10", null ]
+    ] ],
+    [ "2. Why libcyn? (vs. Traditional Tools)", "index.html#autotoc_md12", null ],
+    [ "3. Quick Start Example", "index.html#autotoc_md14", null ],
+    [ "4. Linking: Static vs. Shared", "index.html#autotoc_md15", [
+      [ "When to use Shared Linking (Default)", "index.html#autotoc_md16", null ],
+      [ "When to use Static Linking", "index.html#autotoc_md17", null ]
+    ] ],
+    [ "5. The \"No Privilege Escalation\" Guarantee", "index.html#autotoc_md18", null ],
+    [ "6. Data Source Reference", "index.html#autotoc_md20", null ],
+    [ "7. Advanced Usage: JSON &amp; GPU Resolution", "index.html#autotoc_md22", [
+      [ "JSON Serialization", "index.html#autotoc_md23", null ],
+      [ "GPU Name Resolution", "index.html#autotoc_md24", null ]
+    ] ],
+    [ "8. Requirements &amp; Portability", "index.html#autotoc_md25", null ],
+    [ "9. Building &amp; Installing", "index.html#autotoc_md27", [
+      [ "1. Using Make (Standard)", "index.html#autotoc_md28", null ],
+      [ "2. Using CMake", "index.html#autotoc_md29", null ],
+      [ "3. Uninstalling", "index.html#autotoc_md30", null ]
+    ] ],
+    [ "10. Documentation &amp; API Reference", "index.html#autotoc_md31", null ],
+    [ "License", "index.html#autotoc_md32", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],

@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['memory_0',['memory',['../structcyn__info.html#a2a3d30abbb45f1652ba7559d1f896a99',1,'cyn_info']]],
-  ['model_1',['model',['../structcyn__cpu.html#a6d6856951a0b19c10153c2104a99d33a',1,'cyn_cpu::model'],['../structcyn__gpu.html#a988d5d0ea1abda07654f61a25f03ad93',1,'cyn_gpu::model'],['../structcyn__hardware.html#a60e62d3e49ae11d948637356aa731113',1,'cyn_hardware::model']]]
+  ['brand_0',['brand',['../structcyn__hardware.html#ac8c54c2985a9831cae0a0215ba9def16',1,'cyn_hardware']]],
+  ['building_20installing_1',['9. Building &amp;amp; Installing',['../index.html#autotoc_md27',1,'']]],
+  ['built_20in_20extras_2',['Built-in Extras',['../index.html#autotoc_md10',1,'']]],
+  ['by_20design_20zero_20escalation_3',['Unprivileged by Design (Zero Escalation)',['../index.html#autotoc_md6',1,'']]]
 ];
