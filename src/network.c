@@ -31,7 +31,7 @@ void cyn_get_network(cyn_ctx_t *ctx, cyn_network *n) {
         cyn__unavail(&n->hostname, "gethostname failed");
 
     res_init();
-    if (_res.defdname && *_res.defdname)
+    if (_res.defdname[0] != '\0')
         cyn__set(&n->domain, "%s", _res.defdname);
     else
         cyn__unavail(&n->domain, "no DNS domain");
