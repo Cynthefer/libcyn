@@ -20,9 +20,10 @@ All public symbols are declared in `<cyn.h>` and are exported with `CYN_API` (th
 
 `libcyn` uses a trinary status system to distinguish between data that is successfully read, data that is fundamentally unavailable on the system, and errors.
 
-
+```c
 typedef enum {
     CYN_OK = 0,
     CYN_UNAVAILABLE,
     CYN_ERROR
 } cyn_status;
+```
