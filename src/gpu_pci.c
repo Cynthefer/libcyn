@@ -40,7 +40,7 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
     static __thread char result[256];
     result[0] = 0;
 
-    char v[5], d[5];
+    char v[5] = {0}, d[5] = {0};
     norm_id(vendor_id, v);
     norm_id(device_id, d);
     if (!v[0] || !d[0]) return NULL;
@@ -54,11 +54,13 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
     int found = 0;
 
     while (fgets(line, sizeof line, f)) {
+        /* Skip comments and empty lines */
         if (line[0] == '#' || line[0] == '\n') continue;
 
         /* Vendor line: "10de  NVIDIA Corporation" (no leading tab) */
         if (line[0] != '\t' && !isspace((unsigned char)line[0])) {
-            char id[5] = {0};
+            char id[5] = {0}; /* Initialize to zero to prevent uninitialised read */
+            /* %4s will null-terminate, but initializing id[] beforehand ensures Valgrind is happy */
             if (sscanf(line, "%4s", id) == 1) {
                 for (int i = 0; id[i]; i++) id[i] = (char)tolower((unsigned char)id[i]);
                 in_vendor = (strcmp(id, v) == 0);
@@ -76,7 +78,7 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
 
         /* Device line: "\t2484  GA104 [GeForce RTX 3070]" */
         if (line[0] == '\t' && line[1] != '\t') {
-            char id[5] = {0};
+            char id[5] = {0}; /* Initialize to zero */
             if (sscanf(line + 1, "%4s", id) == 1) {
                 for (int i = 0; id[i]; i++) id[i] = (char)tolower((unsigned char)id[i]);
                 if (strcmp(id, d) == 0) {
