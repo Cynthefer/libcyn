@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['opts_0',['opts',['../structcyn__ctx.html#a47e4796f9e498645b38d407cb252c43c',1,'cyn_ctx']]]
+  ['public_5fip_0',['public_ip',['../structcyn__network.html#a512f1e65be9bbbade765ff4075833604',1,'cyn_network']]]
 ];

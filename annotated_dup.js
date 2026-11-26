@@ -1,7 +1,6 @@
 var annotated_dup =
 [
     [ "cyn_cpu", "structcyn__cpu.html", "structcyn__cpu" ],
-    [ "cyn_ctx", "structcyn__ctx.html", "structcyn__ctx" ],
     [ "cyn_field", "structcyn__field.html", "structcyn__field" ],
     [ "cyn_gpu", "structcyn__gpu.html", "structcyn__gpu" ],
     [ "cyn_hardware", "structcyn__hardware.html", "structcyn__hardware" ],
