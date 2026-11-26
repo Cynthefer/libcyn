@@ -3,7 +3,7 @@
 
 ## `docs/DESIGN.md`
 
-```markdown
+markdown
 # libcyn — Design
 
 ## Goals
