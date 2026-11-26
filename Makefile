@@ -9,24 +9,24 @@ SRC = src/cyn.c src/util.c src/user.c src/system.c src/network.c \
       src/memory.c src/storage.c src/cpu.c src/gpu.c src/gpu_pci.c \
       src/hardware.c src/json.c
 
-libcyn.pc: libcyn.pc.in
-	sed -e 's|@PREFIX@|$(PREFIX)|g' \
-	    -e 's|@VERSION@|$(VERSION)|g' \
-	    libcyn.pc.in > libcyn.pc
-
 OBJ = $(SRC:.c=.o)
 
-all: libcyn.a libcyn.so
+all: libcyn.a libcyn.so.$(SOVERSION)
 
 libcyn.a: $(OBJ)
 	$(AR) rcs $@ $^
 
-libcyn.so: $(OBJ)
+libcyn.so.$(SOVERSION): $(OBJ)
 	$(CC) -shared -Wl,-soname,libcyn.so.$(SOVERSION) -o $@ $^
 	ln -sf libcyn.so.$(SOVERSION) libcyn.so
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+
+libcyn.pc: libcyn.pc.in
+	sed -e 's|@PREFIX@|$(PREFIX)|g' \
+	    -e 's|@VERSION@|$(VERSION)|g' \
+	    libcyn.pc.in > libcyn.pc
 
 install: all libcyn.pc
 	install -d $(DESTDIR)$(PREFIX)/include $(DESTDIR)$(PREFIX)/lib
@@ -49,12 +49,13 @@ uninstall:
 	@echo "libcyn uninstalled from $(DESTDIR)$(PREFIX)"
 
 clean:
-	rm -f $(OBJ) libcyn.a libcyn.so libcyn.so.$(SOVERSION)
+	rm -f $(OBJ) libcyn.a libcyn.so libcyn.so.$(SOVERSION) libcyn.pc test_cyn demo
+
 check: all
-	$(CC) $(CFLAGS) tests/test_cyn.c -L. -lcyn -o test_cyn
-	LD_LIBRARY_PATH=. ./test_cyn
-	$(CC) $(CFLAGS) examples/demo.c -L. -lcyn -o demo
-	LD_LIBRARY_PATH=. ./demo
+	$(CC) $(CFLAGS) tests/test_cyn.c libcyn.a -o test_cyn
+	./test_cyn
+	$(CC) $(CFLAGS) examples/demo.c libcyn.a -o demo
+	./demo
 
 check-strict: clean
 	$(MAKE) all CFLAGS="$(CFLAGS) -Werror -pedantic"
