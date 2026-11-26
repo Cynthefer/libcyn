@@ -40,16 +40,16 @@ jobs:
       - uses: actions/checkout@v4.2.2
 
       - name: Install dependencies
-        run: |
-          if [ "${{ matrix.distro }}" = "ubuntu" ]; then
-            apt-get update
-            apt-get install -y build-essential clang make pkg-config valgrind curl pciutils
-          elif [ "${{ matrix.distro }}" = "fedora" ]; then
-            dnf install -y gcc clang make pkgconf-pkg-config valgrind curl pciutils
-          elif [ "${{ matrix.distro }}" = "arch" ]; then
-            pacman -Sy --noconfirm base-devel clang make pkgconf valgrind curl pciutils
-          fi
-
+     run: |
+      if [ "${{ matrix.distro }}" = "ubuntu" ]; then
+        apt-get update
+        apt-get install -y build-essential clang make pkg-config valgrind curl pciutils libasan8 libubsan1
+      elif [ "${{ matrix.distro }}" = "fedora" ]; then
+        dnf install -y gcc clang make pkgconf-pkg-config valgrind curl pciutils libasan libubsan
+      elif [ "${{ matrix.distro }}" = "arch" ]; then
+        pacman -Sy --noconfirm base-devel clang make pkgconf valgrind curl pciutils
+      fi
+      
       - name: Plain build & test
         run: |
           make clean
