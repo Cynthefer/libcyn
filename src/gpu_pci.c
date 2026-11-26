@@ -37,7 +37,7 @@ static FILE *open_pci_ids(void) {
 
 const char *cyn_gpu_resolve_name(const char *vendor_id,
                                  const char *device_id) {
-    static __thread char result[256];
+    static __thread char result[512];
     result[0] = 0;
 
     char v[5] = {0}, d[5] = {0};
@@ -50,7 +50,7 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
 
     char line[512];
     int in_vendor = 0;
-    char vendor_name[128] = {0};
+    char vendor_name[256] = {0};
     int found = 0;
 
     while (fgets(line, sizeof line, f)) {
@@ -59,8 +59,7 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
 
         /* Vendor line: "10de  NVIDIA Corporation" (no leading tab) */
         if (line[0] != '\t' && !isspace((unsigned char)line[0])) {
-            char id[5] = {0}; /* Initialize to zero to prevent uninitialised read */
-            /* %4s will null-terminate, but initializing id[] beforehand ensures Valgrind is happy */
+            char id[5] = {0};
             if (sscanf(line, "%4s", id) == 1) {
                 for (int i = 0; id[i]; i++) id[i] = (char)tolower((unsigned char)id[i]);
                 in_vendor = (strcmp(id, v) == 0);
@@ -68,7 +67,8 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
                     char *p = line + 4;
                     while (*p==' '||*p=='\t') p++;
                     p[strcspn(p,"\n")] = 0;
-                    snprintf(vendor_name, sizeof vendor_name, "%s", p);
+                    /* Use %.*s to guarantee no truncation warnings */
+                    snprintf(vendor_name, sizeof vendor_name, "%.*s", (int)sizeof(vendor_name) - 1, p);
                 }
             }
             continue;
@@ -78,14 +78,17 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
 
         /* Device line: "\t2484  GA104 [GeForce RTX 3070]" */
         if (line[0] == '\t' && line[1] != '\t') {
-            char id[5] = {0}; /* Initialize to zero */
+            char id[5] = {0};
             if (sscanf(line + 1, "%4s", id) == 1) {
                 for (int i = 0; id[i]; i++) id[i] = (char)tolower((unsigned char)id[i]);
                 if (strcmp(id, d) == 0) {
                     char *p = line + 5;
                     while (*p==' '||*p=='\t') p++;
                     p[strcspn(p,"\n")] = 0;
-                    snprintf(result, sizeof result, "%s %s", vendor_name, p);
+                    /* Use %.*s to guarantee no truncation warnings */
+                    snprintf(result, sizeof result, "%.*s %.*s", 
+                             (int)sizeof(vendor_name) - 1, vendor_name, 
+                             (int)sizeof(line) - 1, p);
                     found = 1;
                     break;
                 }
