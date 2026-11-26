@@ -37,7 +37,8 @@ static FILE *open_pci_ids(void) {
 
 const char *cyn_gpu_resolve_name(const char *vendor_id,
                                  const char *device_id) {
-    static __thread char result[512];
+    /* CHANGE THIS LINE: 512 -> 1024 */
+    static __thread char result[1024]; 
     result[0] = 0;
 
     char v[5] = {0}, d[5] = {0};
@@ -54,10 +55,8 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
     int found = 0;
 
     while (fgets(line, sizeof line, f)) {
-        /* Skip comments and empty lines */
         if (line[0] == '#' || line[0] == '\n') continue;
 
-        /* Vendor line: "10de  NVIDIA Corporation" (no leading tab) */
         if (line[0] != '\t' && !isspace((unsigned char)line[0])) {
             char id[5] = {0};
             if (sscanf(line, "%4s", id) == 1) {
@@ -67,7 +66,6 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
                     char *p = line + 4;
                     while (*p==' '||*p=='\t') p++;
                     p[strcspn(p,"\n")] = 0;
-                    /* Use %.*s to guarantee no truncation warnings */
                     snprintf(vendor_name, sizeof vendor_name, "%.*s", (int)sizeof(vendor_name) - 1, p);
                 }
             }
@@ -76,7 +74,6 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
 
         if (!in_vendor) continue;
 
-        /* Device line: "\t2484  GA104 [GeForce RTX 3070]" */
         if (line[0] == '\t' && line[1] != '\t') {
             char id[5] = {0};
             if (sscanf(line + 1, "%4s", id) == 1) {
@@ -85,7 +82,6 @@ const char *cyn_gpu_resolve_name(const char *vendor_id,
                     char *p = line + 5;
                     while (*p==' '||*p=='\t') p++;
                     p[strcspn(p,"\n")] = 0;
-                    /* Use %.*s to guarantee no truncation warnings */
                     snprintf(result, sizeof result, "%.*s %.*s", 
                              (int)sizeof(vendor_name) - 1, vendor_name, 
                              (int)sizeof(line) - 1, p);
