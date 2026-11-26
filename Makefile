@@ -39,34 +39,29 @@ libcyn.pc: libcyn.pc.in
 install: all
 	@echo "Installing libcyn to $(DESTDIR)$(PREFIX)..."
 	
-	# 1. Copy Headers
+	@echo "# 1. Copy Headers"
 	@install -d $(DESTDIR)$(PREFIX)/include
 	@install -m644 include/cyn.h $(DESTDIR)$(PREFIX)/include/
 	
-	# 2. Copy Libraries
+	@echo "# 2. Copy Libraries"
 	@install -d $(DESTDIR)$(PREFIX)/lib
 	@install -m644 libcyn.a $(DESTDIR)$(PREFIX)/lib/
 	@install -m755 libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/
 	@ln -sf libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/libcyn.so
 	
-	# 3. Copy pkg-config & Man page
+	@echo "# 3. Copy pkg-config & Man page"
 	@install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
 	@install -m644 libcyn.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
 	@install -d $(DESTDIR)$(PREFIX)/share/man/man3
 	@install -m644 man/cyn.3 $(DESTDIR)$(PREFIX)/share/man/man3/
 
-	# 4. System Configuration (Skip if packaging)
+	@echo "# 4. System Configuration (Skip if packaging)"
 	@if [ -z "$(DESTDIR)" ]; then \
 		echo "Configuring global system paths..."; \
-		\
-		# Tell Fedora/Debian/etc. to look in our lib directory automatically
 		echo "$(PREFIX)/lib" | sudo tee /etc/ld.so.conf.d/libcyn.conf > /dev/null; \
 		sudo ldconfig; \
-		\
-		# Tell Clang to auto-link -lcyn for all future programs
 		sudo mkdir -p /etc/clang; \
 		echo "LDFLAGS=-L$(PREFIX)/lib -lcyn" | sudo tee /etc/clang/global-config.cfg > /dev/null; \
-		\
 		echo "Done! You can now compile using: clang myapp.c -o myapp"; \
 	fi
 
