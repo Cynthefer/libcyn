@@ -1,44 +1,73 @@
+# ==============================================================================
+# libcyn Makefile
+# Supports standard Linux (GCC/Clang) and Termux (Android/Bionic)
+# ==============================================================================
+
+# Detect Termux and use its prefix, otherwise default to /usr/local
+PREFIX  ?= /usr/local
+DESTDIR ?= 
+
+# Use the compiler provided by the environment, fallback to 'cc'
 CC      ?= cc
+
+# Termux usually uses llvm-ar. Standard Linux uses ar.
+AR      ?= $(shell command -v llvm-ar 2>/dev/null || command -v ar)
+
+# Versioning
+VERSION   = 0.1.0
+SOVERSION = 0
+
+# Flags
 CFLAGS  ?= -O2 -g
 CFLAGS  += -Wall -Wextra -fPIC -fvisibility=hidden -Iinclude
-PREFIX  ?= /usr/local
-SOVERSION = 0
-VERSION = 0.0.1
+LDFLAGS +=
 
+# Source files
 SRC = src/cyn.c src/util.c src/user.c src/system.c src/network.c \
       src/memory.c src/storage.c src/cpu.c src/gpu.c src/gpu_pci.c \
       src/hardware.c src/json.c
 
 OBJ = $(SRC:.c=.o)
 
+# Default target
 all: libcyn.a libcyn.so.$(SOVERSION)
 
+# --- Static Library ---
 libcyn.a: $(OBJ)
 	$(AR) rcs $@ $^
 
+# --- Shared Library ---
 libcyn.so.$(SOVERSION): $(OBJ)
-	$(CC) -shared -Wl,-soname,libcyn.so.$(SOVERSION) -o $@ $^
+	$(CC) -shared -Wl,-soname,libcyn.so.$(SOVERSION) -o $@ $^ $(LDFLAGS)
 	ln -sf libcyn.so.$(SOVERSION) libcyn.so
 
+# --- Compilation ---
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# --- pkg-config generation ---
 libcyn.pc: libcyn.pc.in
 	sed -e 's|@PREFIX@|$(PREFIX)|g' \
 	    -e 's|@VERSION@|$(VERSION)|g' \
 	    libcyn.pc.in > libcyn.pc
 
+# --- Installation ---
 install: all libcyn.pc
-	install -d $(DESTDIR)$(PREFIX)/include $(DESTDIR)$(PREFIX)/lib
+	install -d $(DESTDIR)$(PREFIX)/include
 	install -m644 include/cyn.h $(DESTDIR)$(PREFIX)/include/
+	
+	install -d $(DESTDIR)$(PREFIX)/lib
 	install -m644 libcyn.a $(DESTDIR)$(PREFIX)/lib/
 	install -m755 libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/
-	install -d $(DESTDIR)$(PREFIX)/share/man/man3
-	install -m644 man/cyn.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	ln -sf libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/libcyn.so
+	
 	install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
 	install -m644 libcyn.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
-	ln -sf libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/libcyn.so
+	
+	install -d $(DESTDIR)$(PREFIX)/share/man/man3
+	install -m644 man/cyn.3 $(DESTDIR)$(PREFIX)/share/man/man3/
 
+# --- Uninstallation ---
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/include/cyn.h
 	rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.a
@@ -48,15 +77,21 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/share/man/man3/cyn.3
 	@echo "libcyn uninstalled from $(DESTDIR)$(PREFIX)"
 
-clean:
-	rm -f $(OBJ) libcyn.a libcyn.so libcyn.so.$(SOVERSION) libcyn.pc test_cyn demo
-
+# --- Testing ---
+# Links against the static library to avoid LD_LIBRARY_PATH issues (especially in Termux)
 check: all
 	$(CC) $(CFLAGS) tests/test_cyn.c libcyn.a -o test_cyn
 	./test_cyn
 	$(CC) $(CFLAGS) examples/demo.c libcyn.a -o demo
 	./demo
 
+# Strict compilation for CI
 check-strict: clean
 	$(MAKE) all CFLAGS="$(CFLAGS) -Werror -pedantic"
 	$(MAKE) check
+
+# --- Cleanup ---
+clean:
+	rm -f $(OBJ) libcyn.a libcyn.so libcyn.so.$(SOVERSION) libcyn.pc test_cyn demo
+
+.PHONY: all install uninstall check check-strict clean
