@@ -25,6 +25,11 @@
 var NAVTREE =
 [
   [ "libcyn", "index.html", [
+    [ "Requirements", "index.html#autotoc_md1", null ],
+    [ "Features", "index.html#autotoc_md2", null ],
+    [ "Quick start", "index.html#autotoc_md3", null ],
+    [ "Documentation", "index.html#autotoc_md4", null ],
+    [ "Building with CMake (alternative)", "index.html#autotoc_md5", null ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
