@@ -32,7 +32,6 @@ jobs:
           - { distro: arch,   cc: gcc }
           - { distro: arch,   cc: clang }
     
-    # This runs the job *inside* the specified Docker image
     container:
       image: ${{ matrix.distro == 'ubuntu' && 'ubuntu:24.04' || matrix.distro == 'fedora' && 'fedora:latest' || 'archlinux:latest' }}
       
@@ -47,24 +46,27 @@ jobs:
           elif [ "${{ matrix.distro }}" = "fedora" ]; then
             dnf install -y gcc clang make pkgconf-pkg-config valgrind curl pciutils libasan libubsan
           elif [ "${{ matrix.distro }}" = "arch" ]; then
-            pacman -Sy --noconfirm base-devel clang make pkgconf valgrind curl pciutils
+            # Enable debug symbols for valgrind
+            echo "[core-debug]" >> /etc/pacman.conf
+            echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
+            pacman -Sy --noconfirm base-devel clang make pkgconf valgrind curl pciutils glibc-debug
           fi
       
       - name: Plain build & test
         run: |
           make clean
-          make CC=${{ matrix.cc }}
+          make all CC=${{ matrix.cc }}
           make check CC=${{ matrix.cc }}
 
       - name: Sanitizer build (ASan/UBSan)
         run: |
           make clean
-          make CC=${{ matrix.cc }} CFLAGS="-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer -Iinclude -fPIC -fvisibility=hidden -Wall -Wextra"
+          make all CC=${{ matrix.cc }} CFLAGS="-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer -Iinclude -fPIC -fvisibility=hidden -Wall -Wextra"
           make check CC=${{ matrix.cc }} CFLAGS="-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer -Iinclude -fPIC -fvisibility=hidden -Wall -Wextra"
 
       - name: Valgrind memory check
         run: |
           make clean
-          make CC=${{ matrix.cc }}
+          make all CC=${{ matrix.cc }}
           cc -g -Iinclude examples/demo.c -L. -lcyn -o demo
           LD_LIBRARY_PATH=. valgrind --error-exitcode=1 --leak-check=full --errors-for-leak-kinds=definite ./demo >/dev/null
