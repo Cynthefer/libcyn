@@ -1,5 +1,5 @@
 <map id="cyn_hardware" name="cyn_hardware">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,173,118,201"/>
-<area shape="rect" id="Node000002" href="$structcyn__field.html" title=" " alt="" coords="22,5,101,33"/>
+<area shape="rect" id="Node000001" title="Hardware (DMI/SMBIOS) information." alt="" coords="5,173,118,201"/>
+<area shape="rect" id="Node000002" href="$structcyn__field.html" title="A wrapper for every single piece of data returned by libcyn." alt="" coords="22,5,101,33"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,48,64,173,59,172,59,49"/>
 </map>

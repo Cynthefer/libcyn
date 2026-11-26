@@ -1,22 +1,22 @@
 <map id="cyn_info" name="cyn_info">
-<area shape="rect" id="Node000001" title=" " alt="" coords="438,318,514,346"/>
-<area shape="rect" id="Node000002" href="$structcyn__user.html" title=" " alt="" coords="5,218,85,245"/>
+<area shape="rect" id="Node000001" title="Aggregate struct containing all system information." alt="" coords="438,318,514,346"/>
+<area shape="rect" id="Node000002" href="$structcyn__user.html" title="User information." alt="" coords="5,218,85,245"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,251,123,273,172,292,244,309,317,319,440,330,434,330,317,324,243,314,171,297,121,278,79,256"/>
-<area shape="rect" id="Node000003" href="$structcyn__field.html" title=" " alt="" coords="433,5,513,33"/>
+<area shape="rect" id="Node000003" href="$structcyn__field.html" title="A wrapper for every single piece of data returned by libcyn." alt="" coords="433,5,513,33"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="416,24,217,35,125,45,93,52,76,59,62,76,52,96,42,141,42,184,45,217,40,217,36,185,37,141,47,95,58,73,73,55,91,47,124,40,217,29,420,20"/>
-<area shape="rect" id="Node000004" href="$structcyn__system.html" title=" " alt="" coords="109,218,208,245"/>
+<area shape="rect" id="Node000004" href="$structcyn__system.html" title="System information." alt="" coords="109,218,208,245"/>
 <area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="415,21,356,25,289,30,230,41,208,49,193,59,178,76,168,97,158,142,156,185,159,218,154,217,151,185,152,141,163,95,174,73,189,55,206,44,229,36,289,25,356,19,420,19"/>
-<area shape="rect" id="Node000005" href="$structcyn__network.html" title=" " alt="" coords="232,218,336,245"/>
+<area shape="rect" id="Node000005" href="$structcyn__network.html" title="Network information." alt="" coords="232,218,336,245"/>
 <area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="416,22,370,33,347,44,327,59,313,77,302,97,289,142,285,185,285,218,280,216,280,185,284,141,297,95,308,74,323,55,344,39,368,28,420,19"/>
-<area shape="rect" id="Node000006" href="$structcyn__memory.html" title=" " alt="" coords="360,218,466,245"/>
+<area shape="rect" id="Node000006" href="$structcyn__memory.html" title="Memory information." alt="" coords="360,218,466,245"/>
 <area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="436,41,425,58,410,101,406,146,408,187,413,219,408,216,403,187,401,146,405,100,420,56,432,44"/>
-<area shape="rect" id="Node000007" href="$structcyn__storage.html" title=" " alt="" coords="491,218,591,245"/>
+<area shape="rect" id="Node000007" href="$structcyn__storage.html" title="Storage information." alt="" coords="491,218,591,245"/>
 <area shape="poly" id="edge10_Node000007_Node000003" title=" " alt="" coords="500,42,510,56,527,100,537,146,543,218,539,216,532,147,522,102,505,58,499,47"/>
-<area shape="rect" id="Node000008" href="$structcyn__cpu.html" title=" " alt="" coords="616,218,690,245"/>
+<area shape="rect" id="Node000008" href="$structcyn__cpu.html" title="CPU information." alt="" coords="616,218,690,245"/>
 <area shape="poly" id="edge12_Node000008_Node000003" title=" " alt="" coords="528,19,575,29,597,40,616,55,631,74,642,96,654,142,658,185,656,219,652,216,653,185,649,143,637,98,626,77,612,59,594,45,573,34,529,24"/>
-<area shape="rect" id="Node000009" href="$structcyn__gpu.html" title=" " alt="" coords="714,218,789,245"/>
+<area shape="rect" id="Node000009" href="$structcyn__gpu.html" title="GPU information." alt="" coords="714,218,789,245"/>
 <area shape="poly" id="edge14_Node000009_Node000003" title=" " alt="" coords="528,19,635,29,683,39,715,55,730,73,742,95,754,141,757,185,755,219,751,216,752,185,749,142,737,97,726,76,711,59,681,44,634,34,529,24"/>
-<area shape="rect" id="Node000010" href="$structcyn__hardware.html" title=" " alt="" coords="813,218,925,245"/>
+<area shape="rect" id="Node000010" href="$structcyn__hardware.html" title="Hardware (DMI/SMBIOS) information." alt="" coords="813,218,925,245"/>
 <area shape="poly" id="edge16_Node000010_Node000003" title=" " alt="" coords="527,17,602,17,687,22,763,34,793,43,815,55,832,73,845,93,862,139,870,184,871,219,867,216,865,184,857,141,841,96,828,76,811,59,791,48,762,39,686,28,602,23,528,22"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,252,225,273,265,292,310,305,356,315,440,328,434,328,356,321,309,311,263,297,222,278,188,257"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="309,254,334,274,361,292,400,309,440,323,435,322,398,314,359,297,331,278,307,259"/>

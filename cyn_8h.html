@@ -92,6 +92,9 @@ $(function(){initNavTree('cyn_8h.html','',''); });
   <div class="headertitle"><div class="title">cyn.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Public API for libcyn, a read-only Linux system information library.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
 <code>#include &lt;stdint.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -99,7 +102,7 @@ Include dependency graph for cyn.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="cyn_8h__incl.png" border="0" usemap="#ainclude_2cyn_8h" loading="lazy" alt=""/></div>
 <map name="ainclude_2cyn_8h" id="ainclude_2cyn_8h">
-<area shape="rect" title=" " alt="" coords="36,5,144,33"/>
+<area shape="rect" title="Public API for libcyn, a read&#45;only Linux system information library." alt="" coords="36,5,144,33"/>
 <area shape="rect" title=" " alt="" coords="5,81,79,109"/>
 <area shape="poly" title=" " alt="" coords="84,32,61,70,57,66,79,35"/>
 <area shape="rect" title=" " alt="" coords="103,81,173,109"/>
@@ -112,16 +115,27 @@ Include dependency graph for cyn.h:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:cyn_5Ffield" id="r_cyn_5Ffield"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__field.html">cyn_field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper for every single piece of data returned by libcyn.  <a href="structcyn__field.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fuser" id="r_cyn_5Fuser"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__user.html">cyn_user</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">User information.  <a href="structcyn__user.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fsystem" id="r_cyn_5Fsystem"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__system.html">cyn_system</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">System information.  <a href="structcyn__system.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fnetwork" id="r_cyn_5Fnetwork"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__network.html">cyn_network</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network information.  <a href="structcyn__network.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fmemory" id="r_cyn_5Fmemory"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__memory.html">cyn_memory</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory information.  <a href="structcyn__memory.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fstorage" id="r_cyn_5Fstorage"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__storage.html">cyn_storage</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Storage information.  <a href="structcyn__storage.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fcpu" id="r_cyn_5Fcpu"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__cpu.html">cyn_cpu</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">CPU information.  <a href="structcyn__cpu.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fgpu" id="r_cyn_5Fgpu"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__gpu.html">cyn_gpu</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">GPU information.  <a href="structcyn__gpu.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Fhardware" id="r_cyn_5Fhardware"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__hardware.html">cyn_hardware</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hardware (DMI/SMBIOS) information.  <a href="structcyn__hardware.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Finfo" id="r_cyn_5Finfo"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__info.html">cyn_info</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Aggregate struct containing all system information.  <a href="structcyn__info.html#details">More...</a><br /></td></tr>
 <tr class="memitem:cyn_5Foptions" id="r_cyn_5Foptions"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcyn__options.html">cyn_options</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration options passed to <a class="el" href="#a7a3172a84b5d48b5683caf280be49035" title="Allocates and initializes a new context.">cyn_create()</a>.  <a href="structcyn__options.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -133,6 +147,7 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:abec42e1ee149952019d45d9df6917640" id="r_abec42e1ee149952019d45d9df6917640"><td class="memItemLeft" align="right" valign="top">typedef struct cyn_ctx&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a></td></tr>
+<tr class="memdesc:abec42e1ee149952019d45d9df6917640"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opaque context holding state and cache.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -140,36 +155,64 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#aa6b1e887769e6c6261a604235b60fc6dab23baf9a47f105f520c4b9200c804a3f">CYN_UNAVAILABLE</a>
 , <a class="el" href="#aa6b1e887769e6c6261a604235b60fc6daf8c21c66e5d9a9115f2ab18be101f896">CYN_ERROR</a>
  }</td></tr>
+<tr class="memdesc:aa6b1e887769e6c6261a604235b60fc6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Status codes indicating the result of a data retrieval.  <a href="#aa6b1e887769e6c6261a604235b60fc6d">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a7a3172a84b5d48b5683caf280be49035" id="r_a7a3172a84b5d48b5683caf280be49035"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> <a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a3172a84b5d48b5683caf280be49035">cyn_create</a> (const <a class="el" href="structcyn__options.html">cyn_options</a> *opts)</td></tr>
+<tr class="memdesc:a7a3172a84b5d48b5683caf280be49035"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates and initializes a new context.  <br /></td></tr>
 <tr class="memitem:aeae875e2ac031b703df24d6be6112994" id="r_aeae875e2ac031b703df24d6be6112994"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeae875e2ac031b703df24d6be6112994">cyn_destroy</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *ctx)</td></tr>
+<tr class="memdesc:aeae875e2ac031b703df24d6be6112994"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees the context and all cached data.  <br /></td></tr>
 <tr class="memitem:a92e76b5e00993225ec6a46da47fb5b76" id="r_a92e76b5e00993225ec6a46da47fb5b76"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> <a class="el" href="#aa6b1e887769e6c6261a604235b60fc6d">cyn_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92e76b5e00993225ec6a46da47fb5b76">cyn_collect</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *ctx, <a class="el" href="structcyn__info.html">cyn_info</a> *out)</td></tr>
+<tr class="memdesc:a92e76b5e00993225ec6a46da47fb5b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all system information into a single struct.  <br /></td></tr>
 <tr class="memitem:a0f451cc34eb421bb936e1a1764e67d7c" id="r_a0f451cc34eb421bb936e1a1764e67d7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f451cc34eb421bb936e1a1764e67d7c">cyn_get_user</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__user.html">cyn_user</a> *)</td></tr>
+<tr class="memdesc:a0f451cc34eb421bb936e1a1764e67d7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects user information.  <br /></td></tr>
 <tr class="memitem:a25ce0863d7bbc2b0969705ecadd67c1a" id="r_a25ce0863d7bbc2b0969705ecadd67c1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25ce0863d7bbc2b0969705ecadd67c1a">cyn_get_system</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__system.html">cyn_system</a> *)</td></tr>
+<tr class="memdesc:a25ce0863d7bbc2b0969705ecadd67c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects OS and kernel information.  <br /></td></tr>
 <tr class="memitem:a702bf0f7c39a7fe1746e144bb040351b" id="r_a702bf0f7c39a7fe1746e144bb040351b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a702bf0f7c39a7fe1746e144bb040351b">cyn_get_network</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__network.html">cyn_network</a> *)</td></tr>
+<tr class="memdesc:a702bf0f7c39a7fe1746e144bb040351b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects network and IP information.  <br /></td></tr>
 <tr class="memitem:a5b24e3edaad68291cf775043ce7098d1" id="r_a5b24e3edaad68291cf775043ce7098d1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b24e3edaad68291cf775043ce7098d1">cyn_get_memory</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__memory.html">cyn_memory</a> *)</td></tr>
+<tr class="memdesc:a5b24e3edaad68291cf775043ce7098d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects RAM information.  <br /></td></tr>
 <tr class="memitem:a5bf808e7837237dc7ec3a388f85d6f0d" id="r_a5bf808e7837237dc7ec3a388f85d6f0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5bf808e7837237dc7ec3a388f85d6f0d">cyn_get_storage</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__storage.html">cyn_storage</a> *)</td></tr>
+<tr class="memdesc:a5bf808e7837237dc7ec3a388f85d6f0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects storage/mount information.  <br /></td></tr>
 <tr class="memitem:a9c88b6ba087b4727eae0cf78fd27078e" id="r_a9c88b6ba087b4727eae0cf78fd27078e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c88b6ba087b4727eae0cf78fd27078e">cyn_get_cpu</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__cpu.html">cyn_cpu</a> *)</td></tr>
+<tr class="memdesc:a9c88b6ba087b4727eae0cf78fd27078e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects CPU information.  <br /></td></tr>
 <tr class="memitem:af27bed086827d610dfa1ccd56b85ce3b" id="r_af27bed086827d610dfa1ccd56b85ce3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af27bed086827d610dfa1ccd56b85ce3b">cyn_get_gpu</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__gpu.html">cyn_gpu</a> *)</td></tr>
+<tr class="memdesc:af27bed086827d610dfa1ccd56b85ce3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects GPU information.  <br /></td></tr>
 <tr class="memitem:ae08403ce67cb179256c1a6c9b2dbe03c" id="r_ae08403ce67cb179256c1a6c9b2dbe03c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae08403ce67cb179256c1a6c9b2dbe03c">cyn_get_hardware</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *, <a class="el" href="structcyn__hardware.html">cyn_hardware</a> *)</td></tr>
+<tr class="memdesc:ae08403ce67cb179256c1a6c9b2dbe03c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects hardware (DMI) information.  <br /></td></tr>
 <tr class="memitem:a9bfd204c943c55d409748aceff43c377" id="r_a9bfd204c943c55d409748aceff43c377"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bfd204c943c55d409748aceff43c377">cyn_user_username</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:a9bfd204c943c55d409748aceff43c377"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns username, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:acb2f58163be487e2d3b30028b16b8ba1" id="r_acb2f58163be487e2d3b30028b16b8ba1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb2f58163be487e2d3b30028b16b8ba1">cyn_user_fullname</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:acb2f58163be487e2d3b30028b16b8ba1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns full name, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:aef0b0cb3e0e7ef3ed17f53b8d0124cef" id="r_aef0b0cb3e0e7ef3ed17f53b8d0124cef"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef0b0cb3e0e7ef3ed17f53b8d0124cef">cyn_system_kernel</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:aef0b0cb3e0e7ef3ed17f53b8d0124cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns kernel name, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:a5dee3a7623283bbb55b9aa3e57b8717d" id="r_a5dee3a7623283bbb55b9aa3e57b8717d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5dee3a7623283bbb55b9aa3e57b8717d">cyn_system_distro</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:a5dee3a7623283bbb55b9aa3e57b8717d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns distro name, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:ab9ff6b0b89dbf372119f19a7d49be332" id="r_ab9ff6b0b89dbf372119f19a7d49be332"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9ff6b0b89dbf372119f19a7d49be332">cyn_network_hostname</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:ab9ff6b0b89dbf372119f19a7d49be332"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns hostname, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:ad88a2c7d30caa4cbaf725e34115a43f1" id="r_ad88a2c7d30caa4cbaf725e34115a43f1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad88a2c7d30caa4cbaf725e34115a43f1">cyn_network_public_ip</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:ad88a2c7d30caa4cbaf725e34115a43f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns public IP, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:a3a5a63900a68ef63e1eaf31c5e162322" id="r_a3a5a63900a68ef63e1eaf31c5e162322"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a5a63900a68ef63e1eaf31c5e162322">cyn_cpu_model</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:a3a5a63900a68ef63e1eaf31c5e162322"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns CPU model, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:aef7fa178dbb4dcbd02c45c11cc434d59" id="r_aef7fa178dbb4dcbd02c45c11cc434d59"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef7fa178dbb4dcbd02c45c11cc434d59">cyn_hardware_model</a> (<a class="el" href="#abec42e1ee149952019d45d9df6917640">cyn_ctx_t</a> *)</td></tr>
+<tr class="memdesc:aef7fa178dbb4dcbd02c45c11cc434d59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns hardware model, or NULL if unavailable. Do not free.  <br /></td></tr>
 <tr class="memitem:a10d53a9f0553090a89335e8236f28543" id="r_a10d53a9f0553090a89335e8236f28543"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10d53a9f0553090a89335e8236f28543">cyn_last_error</a> (void)</td></tr>
+<tr class="memdesc:a10d53a9f0553090a89335e8236f28543"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a thread-local string describing the last error.  <br /></td></tr>
 <tr class="memitem:a4326290a7bea72c204ba127f974c68d0" id="r_a4326290a7bea72c204ba127f974c68d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4326290a7bea72c204ba127f974c68d0">cyn_status_str</a> (<a class="el" href="#aa6b1e887769e6c6261a604235b60fc6d">cyn_status</a> s)</td></tr>
+<tr class="memdesc:a4326290a7bea72c204ba127f974c68d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a status enum to a human-readable string.  <br /></td></tr>
 <tr class="memitem:a35384073695e2d337ee49ff3e94ba946" id="r_a35384073695e2d337ee49ff3e94ba946"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35384073695e2d337ee49ff3e94ba946">cyn_to_json</a> (const <a class="el" href="structcyn__info.html">cyn_info</a> *info)</td></tr>
+<tr class="memdesc:a35384073695e2d337ee49ff3e94ba946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes a <a class="el" href="structcyn__info.html" title="Aggregate struct containing all system information.">cyn_info</a> struct to a JSON string.  <br /></td></tr>
 <tr class="memitem:a3dc31c3cba93e67d68de5a0afd93d886" id="r_a3dc31c3cba93e67d68de5a0afd93d886"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3dc31c3cba93e67d68de5a0afd93d886">cyn_json_free</a> (char *json)</td></tr>
+<tr class="memdesc:a3dc31c3cba93e67d68de5a0afd93d886"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a JSON string returned by <a class="el" href="#a35384073695e2d337ee49ff3e94ba946" title="Serializes a cyn_info struct to a JSON string.">cyn_to_json()</a>.  <br /></td></tr>
 <tr class="memitem:a65624195fe0a00aa189686784747dfd0" id="r_a65624195fe0a00aa189686784747dfd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65624195fe0a00aa189686784747dfd0">cyn_gpu_resolve_name</a> (const char *vendor_id, const char *device_id)</td></tr>
+<tr class="memdesc:a65624195fe0a00aa189686784747dfd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resolves PCI IDs to human-readable names using pci.ids.  <br /></td></tr>
 <tr class="memitem:a1900b6839f526af36b75034cfe5fb60d" id="r_a1900b6839f526af36b75034cfe5fb60d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a29498a7826aefa8c770bba5e14f10d7b">CYN_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1900b6839f526af36b75034cfe5fb60d">cyn_set_pci_ids_path</a> (const char *path)</td></tr>
+<tr class="memdesc:a1900b6839f526af36b75034cfe5fb60d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overrides the path to the pci.ids database.  <br /></td></tr>
 </table>
-<a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Public API for libcyn, a read-only Linux system information library. </p>
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a29498a7826aefa8c770bba5e14f10d7b" name="a29498a7826aefa8c770bba5e14f10d7b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a29498a7826aefa8c770bba5e14f10d7b">&#9670;&#160;</a></span>CYN_API</h2>
 
@@ -239,6 +282,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Opaque context holding state and cache. </p>
+
 </div>
 </div>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
@@ -253,10 +298,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Status codes indicating the result of a data retrieval. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa6b1e887769e6c6261a604235b60fc6da087492e80f6c7167903741dfa63bc088" name="aa6b1e887769e6c6261a604235b60fc6da087492e80f6c7167903741dfa63bc088"></a>CYN_OK&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aa6b1e887769e6c6261a604235b60fc6dab23baf9a47f105f520c4b9200c804a3f" name="aa6b1e887769e6c6261a604235b60fc6dab23baf9a47f105f520c4b9200c804a3f"></a>CYN_UNAVAILABLE&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aa6b1e887769e6c6261a604235b60fc6daf8c21c66e5d9a9115f2ab18be101f896" name="aa6b1e887769e6c6261a604235b60fc6daf8c21c66e5d9a9115f2ab18be101f896"></a>CYN_ERROR&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa6b1e887769e6c6261a604235b60fc6da087492e80f6c7167903741dfa63bc088" name="aa6b1e887769e6c6261a604235b60fc6da087492e80f6c7167903741dfa63bc088"></a>CYN_OK&#160;</td><td class="fielddoc"><p>The field was successfully populated. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa6b1e887769e6c6261a604235b60fc6dab23baf9a47f105f520c4b9200c804a3f" name="aa6b1e887769e6c6261a604235b60fc6dab23baf9a47f105f520c4b9200c804a3f"></a>CYN_UNAVAILABLE&#160;</td><td class="fielddoc"><p>Readable in principle, but not on this system / needs root. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aa6b1e887769e6c6261a604235b60fc6daf8c21c66e5d9a9115f2ab18be101f896" name="aa6b1e887769e6c6261a604235b60fc6daf8c21c66e5d9a9115f2ab18be101f896"></a>CYN_ERROR&#160;</td><td class="fielddoc"><p>A function call failed (e.g., out of memory). </p>
+</td></tr>
 </table>
 
 </div>
@@ -281,6 +331,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collects all system information into a single struct. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The active context. </td></tr>
+    <tr><td class="paramname">out</td><td>Pointer to the <a class="el" href="structcyn__info.html" title="Aggregate struct containing all system information.">cyn_info</a> struct to populate. Will be zeroed first. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>CYN_OK if the collection routine ran successfully. </dd></dl>
+
 </div>
 </div>
 <a id="a3a5a63900a68ef63e1eaf31c5e162322" name="a3a5a63900a68ef63e1eaf31c5e162322"></a>
@@ -297,6 +357,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns CPU model, or NULL if unavailable. Do not free. </p>
 
 </div>
 </div>
@@ -315,6 +377,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Allocates and initializes a new context. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">opts</td><td>Configuration options, or NULL for defaults. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new context, or NULL on out-of-memory. </dd></dl>
+
 </div>
 </div>
 <a id="aeae875e2ac031b703df24d6be6112994" name="aeae875e2ac031b703df24d6be6112994"></a>
@@ -331,6 +402,14 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Frees the context and all cached data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>The context to destroy. Safe to pass NULL. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -353,6 +432,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collects CPU information. </p>
+
 </div>
 </div>
 <a id="af27bed086827d610dfa1ccd56b85ce3b" name="af27bed086827d610dfa1ccd56b85ce3b"></a>
@@ -373,6 +454,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Collects GPU information. </p>
 
 </div>
 </div>
@@ -395,6 +478,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collects hardware (DMI) information. </p>
+
 </div>
 </div>
 <a id="a5b24e3edaad68291cf775043ce7098d1" name="a5b24e3edaad68291cf775043ce7098d1"></a>
@@ -415,6 +500,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Collects RAM information. </p>
 
 </div>
 </div>
@@ -437,6 +524,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collects network and IP information. </p>
+
 </div>
 </div>
 <a id="a5bf808e7837237dc7ec3a388f85d6f0d" name="a5bf808e7837237dc7ec3a388f85d6f0d"></a>
@@ -457,6 +546,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Collects storage/mount information. </p>
 
 </div>
 </div>
@@ -479,6 +570,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Collects OS and kernel information. </p>
+
 </div>
 </div>
 <a id="a0f451cc34eb421bb936e1a1764e67d7c" name="a0f451cc34eb421bb936e1a1764e67d7c"></a>
@@ -499,6 +592,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Collects user information. </p>
 
 </div>
 </div>
@@ -521,6 +616,16 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Resolves PCI IDs to human-readable names using pci.ids. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vendor_id</td><td>The vendor hex string (e.g., "0x10de"). </td></tr>
+    <tr><td class="paramname">device_id</td><td>The device hex string (e.g., "0x2484"). </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to internal buffer (valid until next call), or NULL if not found. Do not free. </dd></dl>
+
 </div>
 </div>
 <a id="aef7fa178dbb4dcbd02c45c11cc434d59" name="aef7fa178dbb4dcbd02c45c11cc434d59"></a>
@@ -537,6 +642,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns hardware model, or NULL if unavailable. Do not free. </p>
 
 </div>
 </div>
@@ -555,6 +662,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Frees a JSON string returned by <a class="el" href="#a35384073695e2d337ee49ff3e94ba946" title="Serializes a cyn_info struct to a JSON string.">cyn_to_json()</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>The string to free. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a10d53a9f0553090a89335e8236f28543" name="a10d53a9f0553090a89335e8236f28543"></a>
@@ -571,6 +686,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns a thread-local string describing the last error. </p>
+<dl class="section return"><dt>Returns</dt><dd>A string that is never NULL. </dd></dl>
 
 </div>
 </div>
@@ -589,6 +707,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns hostname, or NULL if unavailable. Do not free. </p>
+
 </div>
 </div>
 <a id="ad88a2c7d30caa4cbaf725e34115a43f1" name="ad88a2c7d30caa4cbaf725e34115a43f1"></a>
@@ -605,6 +725,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns public IP, or NULL if unavailable. Do not free. </p>
 
 </div>
 </div>
@@ -623,6 +745,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Overrides the path to the pci.ids database. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">path</td><td>The absolute path to the file. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a4326290a7bea72c204ba127f974c68d0" name="a4326290a7bea72c204ba127f974c68d0"></a>
@@ -639,6 +769,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Converts a status enum to a human-readable string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>The status. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>"ok", "unavailable", or "error". </dd></dl>
 
 </div>
 </div>
@@ -657,6 +796,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns distro name, or NULL if unavailable. Do not free. </p>
+
 </div>
 </div>
 <a id="aef0b0cb3e0e7ef3ed17f53b8d0124cef" name="aef0b0cb3e0e7ef3ed17f53b8d0124cef"></a>
@@ -673,6 +814,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns kernel name, or NULL if unavailable. Do not free. </p>
 
 </div>
 </div>
@@ -691,6 +834,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Serializes a <a class="el" href="structcyn__info.html" title="Aggregate struct containing all system information.">cyn_info</a> struct to a JSON string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">info</td><td>The populated struct. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A heap-allocated JSON string. Must be freed with <a class="el" href="#a3dc31c3cba93e67d68de5a0afd93d886" title="Frees a JSON string returned by cyn_to_json().">cyn_json_free()</a>. Returns NULL on OOM. </dd></dl>
+
 </div>
 </div>
 <a id="acb2f58163be487e2d3b30028b16b8ba1" name="acb2f58163be487e2d3b30028b16b8ba1"></a>
@@ -708,6 +860,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Returns full name, or NULL if unavailable. Do not free. </p>
+
 </div>
 </div>
 <a id="a9bfd204c943c55d409748aceff43c377" name="a9bfd204c943c55d409748aceff43c377"></a>
@@ -724,6 +878,8 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Returns username, or NULL if unavailable. Do not free. </p>
 
 </div>
 </div>
