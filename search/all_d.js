@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quick_20start_0',['Quick start',['../md_README.html#autotoc_md3',1,'']]]
+  ['release_0',['release',['../structcyn__system.html#a3dce05afa3d2a5a72ce5e76efe775f46',1,'cyn_system']]]
 ];
