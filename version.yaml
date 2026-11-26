@@ -1,0 +1,5 @@
+- name: Version consistency
+  run: |
+    H=$(grep CYN_VERSION_MAJOR include/cyn.h | awk '{print $3}')
+    M=$(grep VERSION Makefile | head -1 | awk '{print $3}')
+    test "$H" = "${M%%.*}" || (echo "version mismatch" && exit 1)

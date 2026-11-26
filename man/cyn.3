@@ -1,0 +1,535 @@
+.TH CYN 3 "2026-11" "libcyn 0.0.1" "Library Functions Manual"
+.SH NAME
+cyn \- read-only Linux system information access library
+.SH SYNOPSIS
+.nf
+.B #include <cyn.h>
+.PP
+.BI "cyn_ctx_t *cyn_create(const cyn_options *" opts ");"
+.BI "void cyn_destroy(cyn_ctx_t *" ctx ");"
+.PP
+.BI "cyn_status cyn_collect(cyn_ctx_t *" ctx ", cyn_info *" out ");"
+.PP
+.BI "void cyn_get_user    (cyn_ctx_t *, cyn_user *);"
+.BI "void cyn_get_system  (cyn_ctx_t *, cyn_system *);"
+.BI "void cyn_get_network (cyn_ctx_t *, cyn_network *);"
+.BI "void cyn_get_memory  (cyn_ctx_t *, cyn_memory *);"
+.BI "void cyn_get_storage (cyn_ctx_t *, cyn_storage *);"
+.BI "void cyn_get_cpu     (cyn_ctx_t *, cyn_cpu *);"
+.BI "void cyn_get_gpu     (cyn_ctx_t *, cyn_gpu *);"
+.BI "void cyn_get_hardware(cyn_ctx_t *, cyn_hardware *);"
+.PP
+.BI "char *cyn_to_json(const cyn_info *" info ");"
+.BI "void  cyn_json_free(char *" json ");"
+.PP
+.BI "const char *cyn_gpu_resolve_name(const char *" vendor ", const char *" device ");"
+.BI "void cyn_set_pci_ids_path(const char *" path ");"
+.PP
+.BI "const char *cyn_last_error(void);"
+.BI "const char *cyn_status_str(cyn_status " s ");"
+.PP
+.BI "int cyn_field_ok(const cyn_field *" f ");"
+.fi
+.SH DESCRIPTION
+.B libcyn
+provides read-only access to Linux system information such as the current
+user, uname data, network addresses, memory, storage, CPU, GPU, and hardware
+identity.
+.PP
+It requires
+.B no privileges
+beyond those of the calling process.
+Fields that normally require root (for example SMBIOS memory speed and CAS
+latency) are reported as
+.BR CYN_UNAVAILABLE
+with a reason stored in the field value.
+.PP
+.B libcyn
+performs no printing. All output is left to the caller: fetch a
+.B cyn_info
+and format it however you like, or serialize it with
+.BR cyn_to_json (3).
+.SH DATA TYPES
+.SS cyn_status
+.RS
+.B CYN_OK
+\(em field populated.
+.br
+.B CYN_UNAVAILABLE
+\(em present in principle but not readable on this system.
+.br
+.B CYN_ERROR
+\(em call failed (e.g.\ NULL argument).
+.RE
+.SS cyn_field
+.nf
+    typedef struct {
+        char        value[256];
+        cyn_status  status;
+    } cyn_field;
+.fi
+.PP
+.BR value
+is always NUL-terminated. When
+.B status
+is not
+.BR CYN_OK ,
+it holds a human-readable reason.
+.SH LIFE CYCLE
+.TP
+.BI "cyn_ctx_t *cyn_create(const cyn_options *" opts ")"
+Allocate a context. Passing
+.B NULL
+uses defaults (no public-IP fetch, 2 s timeout).
+.TP
+.BI "void cyn_destroy(cyn_ctx_t *" ctx ")"
+Release a context. Safe on
+.BR NULL .
+.SH COLLECTION
+.TP
+.BI "cyn_status cyn_collect(cyn_ctx_t *" ctx ", cyn_info *" out ")"
+Populate every section of
+.IR out .
+Returns
+.B CYN_OK
+if the call ran; per-field results are in each field's
+.BR status .
+.TP
+.BI "void cyn_get_" section "(cyn_ctx_t *ctx, cyn_" section " *out)"
+Populate just one section. Sections:
+.IR user ", " system ", " network ", " memory ", " storage ", " cpu ", " gpu ", " hardware .
+The destination is zeroed first.
+.SH JSON
+.TP
+.BI "char *cyn_to_json(const cyn_info *" info ")"
+Return a heap-allocated JSON document. The library never writes it anywhere.
+Free with
+.BR cyn_json_free ().
+.TP
+.BI "void cyn_json_free(char *" json ")"
+Free a string returned by
+.BR cyn_to_json ().
+.SH GPU RESOLUTION
+.TP
+.BI "const char *cyn_gpu_resolve_name(const char *" vendor ", const char *" device ")"
+Translate PCI IDs (e.g.\ "0x10de", "0x2484") into "NVIDIA Corporation GA104
+[GeForce RTX 3070]" by consulting
+.IR pci.ids .
+Returns a pointer to a thread-local static buffer, or
+.B NULL
+if not found.
+.TP
+.BI "void cyn_set_pci_ids_path(const char *" path ")"
+Override the default search order. Default:
+.RS
+.IP 1. 4
+path set by this call
+.IP 2. 4
+.IR /usr/share/misc/pci.ids
+.IP 3. 4
+.IR /usr/share/hwdata/pci.ids
+.IP 4. 4
+.IR /usr/share/pci.ids
+.IP 5. 4
+.IR ./data/pci.ids
+.RE
+.SH ERRORS
+.TP
+.B const char *cyn_last_error(void)
+Thread-local error string set by internal failures. Never
+.BR NULL .
+.TP
+.BI "const char *cyn_status_str(cyn_status " s ")"
+Human-readable form of a status.
+.SH THREAD SAFETY
+A
+.B cyn_ctx_t
+must be used by one thread at a time. Field reads and
+.B cyn_to_json
+are safe concurrently as long as each thread has its own destination.
+.SH EXAMPLE
+.nf
+#include <cyn.h>
+#include <stdio.h>
+
+int main(void) {
+    cyn_ctx_t *ctx = cyn_create(NULL);
+    cyn_info info;
+    cyn_collect(ctx, &info);
+
+    if (cyn_field_ok(&info.system.distro))
+        printf("distro: %s\\n", info.system.distro.value);
+
+    char *json = cyn_to_json(&info);
+    if (json) {
+        fputs(json, stdout);
+        cyn_json_free(json);
+    }
+    cyn_destroy(ctx);
+}
+.fi
+.SH "SEE ALSO"
+.BR uname (2),
+.BR getpwuid (3),
+.BR getifaddrs (3),
+.BR statvfs (3),
+.BR proc (5),
+.BR pci.ids (5)
+.SH AUTHORS
+Your Name <you@example.com>.TH CYN 3 "2025" "libcyn 0.1.0" "Library Functions Manual"
+.SH NAME
+cyn \- read-only Linux system information access library
+.SH SYNOPSIS
+.nf
+.B #include <cyn.h>
+.PP
+.BI "cyn_ctx_t *cyn_create(const cyn_options *" opts ");"
+.BI "void cyn_destroy(cyn_ctx_t *" ctx ");"
+.PP
+.BI "cyn_status cyn_collect(cyn_ctx_t *" ctx ", cyn_info *" out ");"
+.PP
+.BI "void cyn_get_user    (cyn_ctx_t *, cyn_user *);"
+.BI "void cyn_get_system  (cyn_ctx_t *, cyn_system *);"
+.BI "void cyn_get_network (cyn_ctx_t *, cyn_network *);"
+.BI "void cyn_get_memory  (cyn_ctx_t *, cyn_memory *);"
+.BI "void cyn_get_storage (cyn_ctx_t *, cyn_storage *);"
+.BI "void cyn_get_cpu     (cyn_ctx_t *, cyn_cpu *);"
+.BI "void cyn_get_gpu     (cyn_ctx_t *, cyn_gpu *);"
+.BI "void cyn_get_hardware(cyn_ctx_t *, cyn_hardware *);"
+.PP
+.BI "char *cyn_to_json(const cyn_info *" info ");"
+.BI "void  cyn_json_free(char *" json ");"
+.PP
+.BI "const char *cyn_gpu_resolve_name(const char *" vendor ", const char *" device ");"
+.BI "void cyn_set_pci_ids_path(const char *" path ");"
+.PP
+.BI "const char *cyn_last_error(void);"
+.BI "const char *cyn_status_str(cyn_status " s ");"
+.PP
+.BI "int cyn_field_ok(const cyn_field *" f ");"
+.fi
+.SH DESCRIPTION
+.B libcyn
+provides read-only access to Linux system information such as the current
+user, uname data, network addresses, memory, storage, CPU, GPU, and hardware
+identity.
+.PP
+It requires
+.B no privileges
+beyond those of the calling process.
+Fields that normally require root (for example SMBIOS memory speed and CAS
+latency) are reported as
+.BR CYN_UNAVAILABLE
+with a reason stored in the field value.
+.PP
+.B libcyn
+performs no printing. All output is left to the caller: fetch a
+.B cyn_info
+and format it however you like, or serialize it with
+.BR cyn_to_json (3).
+.SH DATA TYPES
+.SS cyn_status
+.RS
+.B CYN_OK
+\(em field populated.
+.br
+.B CYN_UNAVAILABLE
+\(em present in principle but not readable on this system.
+.br
+.B CYN_ERROR
+\(em call failed (e.g.\ NULL argument).
+.RE
+.SS cyn_field
+.nf
+    typedef struct {
+        char        value[256];
+        cyn_status  status;
+    } cyn_field;
+.fi
+.PP
+.BR value
+is always NUL-terminated. When
+.B status
+is not
+.BR CYN_OK ,
+it holds a human-readable reason.
+.SH LIFE CYCLE
+.TP
+.BI "cyn_ctx_t *cyn_create(const cyn_options *" opts ")"
+Allocate a context. Passing
+.B NULL
+uses defaults (no public-IP fetch, 2 s timeout).
+.TP
+.BI "void cyn_destroy(cyn_ctx_t *" ctx ")"
+Release a context. Safe on
+.BR NULL .
+.SH COLLECTION
+.TP
+.BI "cyn_status cyn_collect(cyn_ctx_t *" ctx ", cyn_info *" out ")"
+Populate every section of
+.IR out .
+Returns
+.B CYN_OK
+if the call ran; per-field results are in each field's
+.BR status .
+.TP
+.BI "void cyn_get_" section "(cyn_ctx_t *ctx, cyn_" section " *out)"
+Populate just one section. Sections:
+.IR user ", " system ", " network ", " memory ", " storage ", " cpu ", " gpu ", " hardware .
+The destination is zeroed first.
+.SH JSON
+.TP
+.BI "char *cyn_to_json(const cyn_info *" info ")"
+Return a heap-allocated JSON document. The library never writes it anywhere.
+Free with
+.BR cyn_json_free ().
+.TP
+.BI "void cyn_json_free(char *" json ")"
+Free a string returned by
+.BR cyn_to_json ().
+.SH GPU RESOLUTION
+.TP
+.BI "const char *cyn_gpu_resolve_name(const char *" vendor ", const char *" device ")"
+Translate PCI IDs (e.g.\ "0x10de", "0x2484") into "NVIDIA Corporation GA104
+[GeForce RTX 3070]" by consulting
+.IR pci.ids .
+Returns a pointer to a thread-local static buffer, or
+.B NULL
+if not found.
+.TP
+.BI "void cyn_set_pci_ids_path(const char *" path ")"
+Override the default search order. Default:
+.RS
+.IP 1. 4
+path set by this call
+.IP 2. 4
+.IR /usr/share/misc/pci.ids
+.IP 3. 4
+.IR /usr/share/hwdata/pci.ids
+.IP 4. 4
+.IR /usr/share/pci.ids
+.IP 5. 4
+.IR ./data/pci.ids
+.RE
+.SH ERRORS
+.TP
+.B const char *cyn_last_error(void)
+Thread-local error string set by internal failures. Never
+.BR NULL .
+.TP
+.BI "const char *cyn_status_str(cyn_status " s ")"
+Human-readable form of a status.
+.SH THREAD SAFETY
+A
+.B cyn_ctx_t
+must be used by one thread at a time. Field reads and
+.B cyn_to_json
+are safe concurrently as long as each thread has its own destination.
+.SH EXAMPLE
+.nf
+#include <cyn.h>
+#include <stdio.h>
+
+int main(void) {
+    cyn_ctx_t *ctx = cyn_create(NULL);
+    cyn_info info;
+    cyn_collect(ctx, &info);
+
+    if (cyn_field_ok(&info.system.distro))
+        printf("distro: %s\\n", info.system.distro.value);
+
+    char *json = cyn_to_json(&info);
+    if (json) {
+        fputs(json, stdout);
+        cyn_json_free(json);
+    }
+    cyn_destroy(ctx);
+}
+.fi
+.SH "SEE ALSO"
+.BR uname (2),
+.BR getpwuid (3),
+.BR getifaddrs (3),
+.BR statvfs (3),
+.BR proc (5),
+.BR pci.ids (5)
+.SH AUTHORS
+Your Name <you@example.com>.TH CYN 3 "2025" "libcyn 0.1.0" "Library Functions Manual"
+.SH NAME
+cyn \- read-only Linux system information access library
+.SH SYNOPSIS
+.nf
+.B #include <cyn.h>
+.PP
+.BI "cyn_ctx_t *cyn_create(const cyn_options *" opts ");"
+.BI "void cyn_destroy(cyn_ctx_t *" ctx ");"
+.PP
+.BI "cyn_status cyn_collect(cyn_ctx_t *" ctx ", cyn_info *" out ");"
+.PP
+.BI "void cyn_get_user    (cyn_ctx_t *, cyn_user *);"
+.BI "void cyn_get_system  (cyn_ctx_t *, cyn_system *);"
+.BI "void cyn_get_network (cyn_ctx_t *, cyn_network *);"
+.BI "void cyn_get_memory  (cyn_ctx_t *, cyn_memory *);"
+.BI "void cyn_get_storage (cyn_ctx_t *, cyn_storage *);"
+.BI "void cyn_get_cpu     (cyn_ctx_t *, cyn_cpu *);"
+.BI "void cyn_get_gpu     (cyn_ctx_t *, cyn_gpu *);"
+.BI "void cyn_get_hardware(cyn_ctx_t *, cyn_hardware *);"
+.PP
+.BI "char *cyn_to_json(const cyn_info *" info ");"
+.BI "void  cyn_json_free(char *" json ");"
+.PP
+.BI "const char *cyn_gpu_resolve_name(const char *" vendor ", const char *" device ");"
+.BI "void cyn_set_pci_ids_path(const char *" path ");"
+.PP
+.BI "const char *cyn_last_error(void);"
+.BI "const char *cyn_status_str(cyn_status " s ");"
+.PP
+.BI "int cyn_field_ok(const cyn_field *" f ");"
+.fi
+.SH DESCRIPTION
+.B libcyn
+provides read-only access to Linux system information such as the current
+user, uname data, network addresses, memory, storage, CPU, GPU, and hardware
+identity.
+.PP
+It requires
+.B no privileges
+beyond those of the calling process.
+Fields that normally require root (for example SMBIOS memory speed and CAS
+latency) are reported as
+.BR CYN_UNAVAILABLE
+with a reason stored in the field value.
+.PP
+.B libcyn
+performs no printing. All output is left to the caller: fetch a
+.B cyn_info
+and format it however you like, or serialize it with
+.BR cyn_to_json (3).
+.SH DATA TYPES
+.SS cyn_status
+.RS
+.B CYN_OK
+\(em field populated.
+.br
+.B CYN_UNAVAILABLE
+\(em present in principle but not readable on this system.
+.br
+.B CYN_ERROR
+\(em call failed (e.g.\ NULL argument).
+.RE
+.SS cyn_field
+.nf
+    typedef struct {
+        char        value[256];
+        cyn_status  status;
+    } cyn_field;
+.fi
+.PP
+.BR value
+is always NUL-terminated. When
+.B status
+is not
+.BR CYN_OK ,
+it holds a human-readable reason.
+.SH LIFE CYCLE
+.TP
+.BI "cyn_ctx_t *cyn_create(const cyn_options *" opts ")"
+Allocate a context. Passing
+.B NULL
+uses defaults (no public-IP fetch, 2 s timeout).
+.TP
+.BI "void cyn_destroy(cyn_ctx_t *" ctx ")"
+Release a context. Safe on
+.BR NULL .
+.SH COLLECTION
+.TP
+.BI "cyn_status cyn_collect(cyn_ctx_t *" ctx ", cyn_info *" out ")"
+Populate every section of
+.IR out .
+Returns
+.B CYN_OK
+if the call ran; per-field results are in each field's
+.BR status .
+.TP
+.BI "void cyn_get_" section "(cyn_ctx_t *ctx, cyn_" section " *out)"
+Populate just one section. Sections:
+.IR user ", " system ", " network ", " memory ", " storage ", " cpu ", " gpu ", " hardware .
+The destination is zeroed first.
+.SH JSON
+.TP
+.BI "char *cyn_to_json(const cyn_info *" info ")"
+Return a heap-allocated JSON document. The library never writes it anywhere.
+Free with
+.BR cyn_json_free ().
+.TP
+.BI "void cyn_json_free(char *" json ")"
+Free a string returned by
+.BR cyn_to_json ().
+.SH GPU RESOLUTION
+.TP
+.BI "const char *cyn_gpu_resolve_name(const char *" vendor ", const char *" device ")"
+Translate PCI IDs (e.g.\ "0x10de", "0x2484") into "NVIDIA Corporation GA104
+[GeForce RTX 3070]" by consulting
+.IR pci.ids .
+Returns a pointer to a thread-local static buffer, or
+.B NULL
+if not found.
+.TP
+.BI "void cyn_set_pci_ids_path(const char *" path ")"
+Override the default search order. Default:
+.RS
+.IP 1. 4
+path set by this call
+.IP 2. 4
+.IR /usr/share/misc/pci.ids
+.IP 3. 4
+.IR /usr/share/hwdata/pci.ids
+.IP 4. 4
+.IR /usr/share/pci.ids
+.IP 5. 4
+.IR ./data/pci.ids
+.RE
+.SH ERRORS
+.TP
+.B const char *cyn_last_error(void)
+Thread-local error string set by internal failures. Never
+.BR NULL .
+.TP
+.BI "const char *cyn_status_str(cyn_status " s ")"
+Human-readable form of a status.
+.SH THREAD SAFETY
+A
+.B cyn_ctx_t
+must be used by one thread at a time. Field reads and
+.B cyn_to_json
+are safe concurrently as long as each thread has its own destination.
+.SH EXAMPLE
+.nf
+#include <cyn.h>
+#include <stdio.h>
+
+int main(void) {
+    cyn_ctx_t *ctx = cyn_create(NULL);
+    cyn_info info;
+    cyn_collect(ctx, &info);
+
+    if (cyn_field_ok(&info.system.distro))
+        printf("distro: %s\\n", info.system.distro.value);
+
+    char *json = cyn_to_json(&info);
+    if (json) {
+        fputs(json, stdout);
+        cyn_json_free(json);
+    }
+    cyn_destroy(ctx);
+}
+.fi
+.SH "SEE ALSO"
+.BR uname (2),
+.BR getpwuid (3),
+.BR getifaddrs (3),
+.BR statvfs (3),
+.BR proc (5),
+.BR pci.ids (5)
+.SH AUTHORS
+Ntando Khanyile <cynthefer@gmail.com>

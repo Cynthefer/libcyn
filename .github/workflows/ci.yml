@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.os }} / ${{ matrix.cc }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu,  cc: gcc   }
+          - { os: ubuntu,  cc: clang }
+          - { os: fedora,  cc: gcc   }
+          - { os: fedora,  cc: clang }
+          - { os: arch,    cc: gcc   }
+          - { os: arch,    cc: clang }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Distro container ---
+      - name: Set container image
+        id: img
+        run: |
+          case "${{ matrix.os }}" in
+            ubuntu) echo "image=ubuntu:24.04"  >> "$GITHUB_OUTPUT" ;;
+            fedora) echo "image=fedora:latest" >> "$GITHUB_OUTPUT" ;;
+            arch)   echo "image=archlinux:latest" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Run CI in ${{ matrix.os }}
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ steps.img.outputs.image }}
+          options: -v ${{ github.workspace }}:/src -w /src
+          shell: sh
+          run: |
+            set -eu
+            case "${{ matrix.os }}" in
+              ubuntu)
+                apt-get update
+                apt-get install -y build-essential clang make pkg-config \
+                                   valgrind curl pciutils
+                ;;
+              fedora)
+                dnf install -y gcc clang make pkgconf-pkg-config \
+                               valgrind curl pciutils
+                ;;
+              arch)
+                pacman -Sy --noconfirm base-devel clang make pkgconf \
+                                     valgrind curl pciutils
+                ;;
+            esac
+
+            # ---------- Plain build ----------
+            make clean
+            make CC=${{ matrix.cc }}
+            make check CC=${{ matrix.cc }}
+
+            # ---------- Sanitizer build ----------
+            make clean
+            make CC=${{ matrix.cc }} \
+                 CFLAGS="-O1 -g -fsanitize=address,undefined \
+                         -fno-omit-frame-pointer -Iinclude -fPIC \
+                         -fvisibility=hidden -Wall -Wextra"
+            make check CC=${{ matrix.cc }} \
+                 CFLAGS="-O1 -g -fsanitize=address,undefined \
+                         -fno-omit-frame-pointer -Iinclude -fPIC \
+                         -fvisibility=hidden -Wall -Wextra"
+
+            # ---------- Valgrind ----------
+            make clean
+            make CC=${{ matrix.cc }}
+            cc -g -Iinclude examples/demo.c -L. -lcyn -o demo
+            LD_LIBRARY_PATH=. valgrind --error-exitcode=1 \
+                 --leak-check=full --errors-for-leak-kinds=definite \
+                 ./demo >/dev/null
+
+  cmake:
+    name: CMake build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
