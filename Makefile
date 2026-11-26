@@ -5,13 +5,15 @@ PREFIX  ?= /usr/local
 SOVERSION = 0
 VERSION = 0.0.1
 
+SRC = src/cyn.c src/util.c src/user.c src/system.c src/network.c \
+      src/memory.c src/storage.c src/cpu.c src/gpu.c src/gpu_pci.c \
+      src/hardware.c src/json.c
+
 libcyn.pc: libcyn.pc.in
 	sed -e 's|@PREFIX@|$(PREFIX)|g' \
 	    -e 's|@VERSION@|$(VERSION)|g' \
 	    libcyn.pc.in > libcyn.pc
 
-SRC = src/cyn.c src/util.c src/user.c src/system.c src/network.c \
-      src/memory.c src/storage.c src/cpu.c src/gpu.c src/hardware.c
 OBJ = $(SRC:.c=.o)
 
 all: libcyn.a libcyn.so
