@@ -1,5 +1,7 @@
 # libcyn
 
+[![Docs](https://img.shields.io/badge/docs-latest-blue)](https://cynthefer.github.io/libcyn/)
+
 `libcyn` is a small, dependency-free C library for **reading Linux system
 information** — user, system, network, memory, storage, CPU, GPU, and
 hardware — **without privilege escalation**.
