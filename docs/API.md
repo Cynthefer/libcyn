@@ -1,12 +1,28 @@
+# libcyn API Reference
+
+All public symbols are declared in `<cyn.h>` and are exported with `CYN_API` (the library is compiled with `-fvisibility=hidden`).
+
+## Quick Reference
+
+- [Status System](#status-system)
+- [Data Structures](#data-structures)
+- [Context Lifecycle](#context-lifecycle)
+- [Collection Functions](#collection-functions)
+- [Convenience Accessors](#convenience-accessors)
+- [JSON Serialization](#json-serialization)
+- [GPU Resolution](#gpu-resolution)
+- [Error Handling](#error-handling)
+- [Thread Safety](#thread-safety)
 
 ---
 
-## Final Makefile tweak
+## Status System
 
-Add the two new sources and the pkg-config rule:
+`libcyn` uses a trinary status system to distinguish between data that is successfully read, data that is fundamentally unavailable on the system, and errors.
 
-```makefile
-VERSION   = 0.1.0
-SRC = src/cyn.c src/util.c src/user.c src/system.c src/network.c \
-      src/memory.c src/storage.c src/cpu.c src/gpu.c src/gpu_pci.c \
-      src/hardware.c src/json.c
+
+typedef enum {
+    CYN_OK = 0,
+    CYN_UNAVAILABLE,
+    CYN_ERROR
+} cyn_status;
