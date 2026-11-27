@@ -15,7 +15,7 @@ extern "C" {
 
 #define CYN_VERSION_MAJOR 0
 #define CYN_VERSION_MINOR 0
-#define CYN_VERSION_PATCH 1
+#define CYN_VERSION_PATCH 2
 
 #define CYN_API __attribute__((visibility("default")))
 

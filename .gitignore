@@ -21,6 +21,9 @@
 *.a
 *.la
 *.lo
+*.rpm
+*.tar.gz
+results_libcyn/
 
 # Shared objects (inc. Windows DLLs)
 *.dll

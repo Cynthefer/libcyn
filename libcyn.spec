@@ -1,5 +1,5 @@
 Name:           libcyn 
-Version:        0.0.1 
+Version:        0.0.2 
 Release:        1%{?dist}
 Summary:        Read-Only Linux system information access library
 License:        BSD-3-Clause
@@ -38,7 +38,7 @@ ask for a struct, and it fills it with validated, zero-terminated strings.
 %doc README.md CHANGELOG.md docs/
 %{_includedir}/cyn.h
 %{_includedir}/libcyn.a
-%{_includedir}/libcyn.so.%{version}
+%{_includedir}/libcyn.so.0
 %{_includedir}/libcyn.so
 %{_includedir}/pkgconfig/libcyn.pc
 %{_mandir}/man3/cyn.3*

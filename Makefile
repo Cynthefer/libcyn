@@ -3,12 +3,12 @@
 # Zero-configuration global installation.
 # ==============================================================================
 
-PREFIX  ?= /usr/local
+PREFIX  ?= /usr
 DESTDIR ?= 
 CC      ?= cc
 AR      ?= $(shell command -v llvm-ar 2>/dev/null || command -v ar)
 
-VERSION   = 0.1.0
+VERSION   = 0.0.2
 SOVERSION = 0
 
 CFLAGS  ?= -O2 -g
