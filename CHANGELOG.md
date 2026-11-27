@@ -2,34 +2,31 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.0] - 2026-11-26
+## [0.0.2] - 2026-11-27
 
-This is the initial release of `libcyn`, a robust, dependency-free C library for querying Linux system information without privilege escalation. 
+This release focuses heavily on the Fedora/RPM packaging pipeline, resolving strict compiler warnings, and finalizing the zero-configuration global installation process.
 
 **Author:** Ntando Khanyile <cynthefer@gmail.com>
 
-### Documentation & Ecosystem
-- **Doxygen Integration:** Added comprehensive Doxygen comments to `include/cyn.h`, structs, and internal macros. Set up a GitHub Actions workflow to automatically build and host the API reference on GitHub Pages.
-- **Rich README:** Completely rewrote `README.md` to emphasize engineering advantages, scalability, zero-overhead, and the "No Privilege Escalation" guarantee.
-- **Developer Guides:** Added `docs/API.md`, `docs/DESIGN.md`, and `docs/BUILDING.md` for deep dives into architecture, memory models, and build instructions.
-- **License:** Officially adopted the BSD 3-Clause License.
+### Build System & Installation
+- **Zero-Configuration Setup:** The `Makefile` `install` target now automatically creates `/etc/ld.so.conf.d/libcyn.conf` and runs `ldconfig`. This permanently fixes the `error while loading shared libraries: libcyn.so.0` issue across all RPM-based and Debian-based systems.
+- **Automatic Clang Integration:** Added automatic generation of `/etc/clang/global-config.cfg` during installation, allowing developers to compile with just `clang app.c -o app` without needing extra linker flags.
+- **RPM Spec Fixes:** Corrected the `Release` tag formatting (`1%{?dist}`) and fixed the typo in the `License` tag (`BISD-3-Clause` to `BSD-3-Clause`).
+- **Fedora Packaging:** Fixed the `fedpkg mockbuild` failure by renaming the template `newpackage.spec` to `libcyn.spec` and correcting `Source0` to point to the custom GitHub Actions tarball.
 
-### Zero-Configuration Install (`Makefile`)
-- **Global Clang/GCC Config:** The `install` target now automatically drops a configuration file into `/etc/clang/global-config.cfg`. You can now compile applications without any linker flags (e.g., `clang cyn.c -o cyn` just works out of the box).
-- **Linker Cache (`ldconfig`):** Added automatic `ldconfig` execution and `/etc/ld.so.conf.d/libcyn.conf` generation to permanently fix the `error while loading shared libraries: libcyn.so.0` issue on Fedora, Debian, and Arch.
-- **Uninstall Cleanup:** The `make uninstall` command now correctly removes all system-wide configuration files and refreshes the dynamic linker cache.
-
-### Stability & Compiler Fixes
-- **Strict Memory Safety:** Fixed Valgrind "uninitialized value" warnings in `gpu_pci.c`. Arrays are now explicitly zero-initialized (`{0}`) before parsing.
-- **Truncation Warnings Fixed:** Implemented `%.*s` precision formatting in `snprintf` calls and increased buffer sizes in `gpu_pci.c` (up to 1024 bytes), completely eliminating Clang `-Wformat-truncation` warnings.
-- **Resolver State Fix:** Removed the deprecated `_res` struct parsing in `network.c`. Replaced it with a robust, cross-platform parser for `/etc/resolv.conf` to fetch the domain name safely.
+### Compiler & Stability Fixes
+- **Eliminated All Truncation Warnings:** Resolved the stubborn `-Wformat-truncation` warnings in `src/gpu_pci.c` by increasing buffer sizes and utilizing precise `%.*s` formatting in `snprintf` calls.
+- **Fixed Resolution Parsing:** Removed the deprecated `_res` struct in `src/network.c` (which caused compiler errors on newer glibc/musl) and replaced it with a safe, robust parser for `/etc/resolv.conf`.
 
 ### Hardware & Root Enhancements
-- **`dmidecode` Parsing:** The `cyn_get_memory` function now detects if the user has root privileges. If so, it safely executes `dmidecode -t memory` via our internal execution wrapper (no shell injection) to fetch RAM Type, Speed, Form Factor, and CAS Latency.
-- **Standardized Messages:** Unavailable root-only fields now cleanly return the reason `"root needed"` instead of a verbose error string.
+- **`dmidecode` Execution:** `cyn_get_memory` now detects if the process is running as root. If so, it safely executes `dmidecode -t memory` to parse RAM Type, Speed, Form Factor, and CAS Latency.
+- **Standardized Root Messages:** Unavailable root-only fields now cleanly return the exact string `"root needed"` instead of verbose error text.
 
 ### CI/CD & Portability
-- **Cross-Distro Testing:** GitHub Actions now runs a matrix build across **Ubuntu 24.04**, **Fedora (latest)**, and **Arch Linux** using both `gcc` and `clang`.
-- **Sanitizers:** Every CI run now compiles and tests the code with `AddressSanitizer` (ASan) and `UndefinedBehaviorSanitizer` (UBSan) to guarantee memory safety.
-- **Valgrind Integration:** The CI matrix runs the test suite under Valgrind (with Arch-specific `glibc-debug` fixes applied) to ensure zero memory leaks.
-- **Termux Support:** Updated the `Makefile` and `network.c` to seamlessly support compilation on Android via Termux (Bionic libc).
+- **Valgrind CI Fix:** Added the `glibc-debug` package installation step for Arch Linux in the GitHub Actions matrix, resolving the Valgrind startup crash.
+- **Sanitizer Matrix:** The CI now runs the test suite under AddressSanitizer (ASan), UndefinedBehaviorSanitizer (UBSan), and Valgrind on Ubuntu, Fedora, and Arch.
+- **Termux Compatibility:** Updated the `Makefile` to explicitly detect `llvm-ar` and `PREFIX=$PREFIX` to ensure seamless compilation on Android (Bionic libc).
+
+### Documentation
+- **Doxygen Integration:** Added comprehensive Doxygen comments to `include/cyn.h` and all internal structs, ensuring the GitHub Pages API reference generates correctly.
+- **Man Page:** Updated the `cyn.3` man page with the new author details and corrected the date to November 2026.
