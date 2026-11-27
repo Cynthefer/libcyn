@@ -24,10 +24,10 @@ ask for a struct, and it fills it with validated, zero-terminated strings.
 %autosetup
 
 %build
-%make_build PREFIX=%{_prefix}
+%make_build PREFIX=%{_prefix} LIBDIR=%{_libdir}
 
 %install
-%make_install PREFIX=%{_prefix}
+%make_install PREFIX=%{_prefix} LIBDIR=%{_libdir}
 
 %files
 %license LICENSE

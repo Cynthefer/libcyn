@@ -4,6 +4,7 @@
 # ==============================================================================
 
 PREFIX  ?= /usr
+LIBDIR  ?= $(PREFIX)/lib
 DESTDIR ?= 
 CC      ?= cc
 AR      ?= $(shell command -v llvm-ar 2>/dev/null || command -v ar)
@@ -33,7 +34,9 @@ libcyn.so.$(SOVERSION): $(OBJ)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 libcyn.pc: libcyn.pc.in
-	@sed -e 's|@PREFIX@|$(PREFIX)|g' -e 's|@VERSION@|$(VERSION)|g' $< > $@
+	@sed -e 's|@PREFIX@|$(PREFIX)|g' \
+	     -e 's|@LIBDIR@|$(LIBDIR)|g' \
+	     -e 's|@VERSION@|$(VERSION)|g' $< > $@
 
 # --- Installation ---
 install: all
@@ -44,34 +47,34 @@ install: all
 	@install -m644 include/cyn.h $(DESTDIR)$(PREFIX)/include/
 	
 	@echo "# 2. Copy Libraries"
-	@install -d $(DESTDIR)$(PREFIX)/lib
-	@install -m644 libcyn.a $(DESTDIR)$(PREFIX)/lib/
-	@install -m755 libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/
-	@ln -sf libcyn.so.$(SOVERSION) $(DESTDIR)$(PREFIX)/lib/libcyn.so
+	@install -d $(DESTDIR)$(LIBDIR)
+	@install -m644 libcyn.a $(DESTDIR)$(LIBDIR)/
+	@install -m755 libcyn.so.$(SOVERSION) $(DESTDIR)$(LIBDIR)/
+	@ln -sf libcyn.so.$(SOVERSION) $(DESTDIR)$(LIBDIR)/libcyn.so
 	
 	@echo "# 3. Copy pkg-config & Man page"
-	@install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
-	@install -m644 libcyn.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
+	@install -d $(DESTDIR)$(LIBDIR)/pkgconfig
+	@install -m644 libcyn.pc $(DESTDIR)$(LIBDIR)/pkgconfig/
 	@install -d $(DESTDIR)$(PREFIX)/share/man/man3
 	@install -m644 man/cyn.3 $(DESTDIR)$(PREFIX)/share/man/man3/
 
 	@echo "# 4. System Configuration (Skip if packaging)"
 	@if [ -z "$(DESTDIR)" ]; then \
 		echo "Configuring global system paths..."; \
-		echo "$(PREFIX)/lib" | sudo tee /etc/ld.so.conf.d/libcyn.conf > /dev/null; \
+		echo "$(LIBDIR)" | sudo tee /etc/ld.so.conf.d/libcyn.conf > /dev/null; \
 		sudo ldconfig; \
 		sudo mkdir -p /etc/clang; \
-		echo "LDFLAGS=-L$(PREFIX)/lib -lcyn" | sudo tee /etc/clang/global-config.cfg > /dev/null; \
+		echo "LDFLAGS=-L$(LIBDIR) -lcyn" | sudo tee /etc/clang/global-config.cfg > /dev/null; \
 		echo "Done! You can now compile using: clang myapp.c -o myapp"; \
 	fi
 
 uninstall:
 	@echo "Uninstalling libcyn..."
 	@rm -f $(DESTDIR)$(PREFIX)/include/cyn.h
-	@rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.a
-	@rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.so.$(SOVERSION)
-	@rm -f $(DESTDIR)$(PREFIX)/lib/libcyn.so
-	@rm -f $(DESTDIR)$(PREFIX)/lib/pkgconfig/libcyn.pc
+	@rm -f $(DESTDIR)$(LIBDIR)/libcyn.a
+	@rm -f $(DESTDIR)$(LIBDIR)/libcyn.so.$(SOVERSION)
+	@rm -f $(DESTDIR)$(LIBDIR)/libcyn.so
+	@rm -f $(DESTDIR)$(LIBDIR)/pkgconfig/libcyn.pc
 	@rm -f $(DESTDIR)$(PREFIX)/share/man/man3/cyn.3
 	@if [ -z "$(DESTDIR)" ]; then \
 		sudo rm -f /etc/ld.so.conf.d/libcyn.conf; \
